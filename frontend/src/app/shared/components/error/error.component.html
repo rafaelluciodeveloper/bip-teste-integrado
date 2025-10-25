@@ -1,0 +1,15 @@
+<div class="error-container text-center py-5">
+  <div class="error-icon mb-3">
+    <i class="fas fa-exclamation-triangle fa-3x text-warning"></i>
+  </div>
+  <h5 class="text-danger mb-3">Ops! Algo deu errado</h5>
+  <p class="text-muted mb-4">{{ message }}</p>
+  <button 
+    *ngIf="showRetry" 
+    type="button" 
+    class="btn btn-outline-primary" 
+    (click)="onRetry()">
+    <i class="fas fa-redo me-2"></i>
+    Tentar Novamente
+  </button>
+</div>
