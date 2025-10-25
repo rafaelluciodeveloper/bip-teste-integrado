@@ -93,7 +93,6 @@ class BeneficioRepositoryTest {
     @Test
     void testSave_NewBeneficio() {
         Beneficio novoBeneficio = new Beneficio("Novo Benefício", "Nova Descrição", new BigDecimal("750.00"));
-        when(em.merge(novoBeneficio)).thenReturn(novoBeneficio);
 
         Beneficio result = beneficioRepository.save(novoBeneficio);
 

@@ -77,7 +77,7 @@ class BeneficioServiceTest {
 
     @Test
     void testFindById_Existing() {
-        when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficio1));
+        when(beneficioRepository.findById(1L)).thenReturn(beneficio1);
 
         Optional<Beneficio> result = beneficioService.findById(1L);
 
@@ -88,7 +88,7 @@ class BeneficioServiceTest {
 
     @Test
     void testFindById_NotExisting() {
-        when(beneficioRepository.findById(999L)).thenReturn(Optional.empty());
+        when(beneficioRepository.findById(999L)).thenReturn(null);
 
         Optional<Beneficio> result = beneficioService.findById(999L);
 
@@ -119,7 +119,7 @@ class BeneficioServiceTest {
 
     @Test
     void testUpdate_Existing() {
-        when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficio1));
+        when(beneficioRepository.findById(1L)).thenReturn(beneficio1);
         when(beneficioRepository.save(any(Beneficio.class))).thenReturn(beneficio1);
 
         Beneficio beneficioAtualizado = new Beneficio("Benefício Atualizado", "Nova Descrição", new BigDecimal("1200.00"));
@@ -132,7 +132,7 @@ class BeneficioServiceTest {
 
     @Test
     void testUpdate_NotExisting() {
-        when(beneficioRepository.findById(999L)).thenReturn(Optional.empty());
+        when(beneficioRepository.findById(999L)).thenReturn(null);
 
         Beneficio beneficioAtualizado = new Beneficio("Benefício Atualizado", "Nova Descrição", new BigDecimal("1200.00"));
 
@@ -143,7 +143,7 @@ class BeneficioServiceTest {
 
     @Test
     void testDeleteById_Existing() {
-        when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficio1));
+        when(beneficioRepository.findById(1L)).thenReturn(beneficio1);
         when(transferenciaRepository.hasTransferencias(1L)).thenReturn(false);
 
         beneficioService.deleteById(1L);
@@ -155,7 +155,7 @@ class BeneficioServiceTest {
 
     @Test
     void testDeleteById_NotExisting() {
-        when(beneficioRepository.findById(999L)).thenReturn(Optional.empty());
+        when(beneficioRepository.findById(999L)).thenReturn(null);
 
         assertThrows(IllegalArgumentException.class, () -> {
             beneficioService.deleteById(999L);
@@ -164,7 +164,7 @@ class BeneficioServiceTest {
 
     @Test
     void testDeleteById_WithTransferencias() {
-        when(beneficioRepository.findById(1L)).thenReturn(Optional.of(beneficio1));
+        when(beneficioRepository.findById(1L)).thenReturn(beneficio1);
         when(transferenciaRepository.hasTransferencias(1L)).thenReturn(true);
 
         assertThrows(IllegalStateException.class, () -> {

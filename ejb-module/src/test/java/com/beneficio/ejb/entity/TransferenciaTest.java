@@ -107,9 +107,16 @@ class TransferenciaTest {
 
     @Test
     void testEqualsAndHashCode() {
+        // Criar transferências com a mesma data para teste de igualdade
+        LocalDateTime dataFixa = LocalDateTime.now();
         Transferencia transferencia1 = new Transferencia(beneficioOrigem, beneficioDestino, new BigDecimal("100.00"));
+        transferencia1.setDataTransferencia(dataFixa);
+        
         Transferencia transferencia2 = new Transferencia(beneficioOrigem, beneficioDestino, new BigDecimal("100.00"));
+        transferencia2.setDataTransferencia(dataFixa);
+        
         Transferencia transferencia3 = new Transferencia(beneficioDestino, beneficioOrigem, new BigDecimal("200.00"));
+        transferencia3.setDataTransferencia(dataFixa);
 
         // Teste de igualdade
         assertEquals(transferencia1, transferencia2);

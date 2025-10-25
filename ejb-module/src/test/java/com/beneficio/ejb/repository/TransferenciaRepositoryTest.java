@@ -63,8 +63,6 @@ class TransferenciaRepositoryTest {
 
     @Test
     void testSave() {
-        when(em.merge(transferencia1)).thenReturn(transferencia1);
-
         Transferencia result = transferenciaRepository.save(transferencia1);
 
         assertNotNull(result);
