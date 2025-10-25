@@ -1,0 +1,240 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+          <i class="fas fa-gift me-2"></i>
+          Gerenciar Benefícios
+        </h2>
+        <button 
+          class="btn btn-primary" 
+          (click)="showForm = !showForm"
+          [disabled]="loading">
+          <i class="fas fa-plus me-2"></i>
+          Novo Benefício
+        </button>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button type="button" class="btn-close" (click)="error = null"></button>
+      </div>
+
+      <!-- Create Form -->
+      <div *ngIf="showForm" class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-plus me-2"></i>
+            Criar Novo Benefício
+          </h5>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="criarBeneficio()">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="nome" class="form-label">Nome *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="nome"
+                  [(ngModel)]="novoBeneficio.nome"
+                  name="nome"
+                  required>
+              </div>
+              <div class="col-md-6">
+                <label for="valor" class="form-label">Valor *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="valor"
+                  [(ngModel)]="novoBeneficio.valor"
+                  name="valor"
+                  step="0.01"
+                  min="0"
+                  required>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea 
+                  class="form-control" 
+                  id="descricao"
+                  [(ngModel)]="novoBeneficio.descricao"
+                  name="descricao"
+                  rows="3"></textarea>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-12">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="ativo"
+                    [(ngModel)]="novoBeneficio.ativo"
+                    name="ativo">
+                  <label class="form-check-label" for="ativo">
+                    Benefício ativo
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <button type="submit" class="btn btn-success me-2">
+                <i class="fas fa-save me-2"></i>
+                Salvar
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="showForm = false">
+                <i class="fas fa-times me-2"></i>
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Benefits List -->
+      <app-beneficio-list 
+        [beneficios]="beneficios"
+        [loading]="loading"
+        [showActions]="true"
+        (edit)="editarBeneficio($event)"
+        (delete)="excluirBeneficio($event)"
+        (transfer)="iniciarTransferencia($event)">
+      </app-beneficio-list>
+
+      <!-- Edit Modal -->
+      <div *ngIf="showEditForm && beneficioEditando" class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <i class="fas fa-edit me-2"></i>
+                Editar Benefício
+              </h5>
+              <button type="button" class="btn-close" (click)="cancelarEdicao()"></button>
+            </div>
+            <div class="modal-body">
+              <form (ngSubmit)="salvarEdicao()">
+                <div class="mb-3">
+                  <label for="editNome" class="form-label">Nome *</label>
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="editNome"
+                    [(ngModel)]="beneficioEditando.nome"
+                    name="editNome"
+                    required>
+                </div>
+                <div class="mb-3">
+                  <label for="editValor" class="form-label">Valor *</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    id="editValor"
+                    [(ngModel)]="beneficioEditando.valor"
+                    name="editValor"
+                    step="0.01"
+                    min="0"
+                    required>
+                </div>
+                <div class="mb-3">
+                  <label for="editDescricao" class="form-label">Descrição</label>
+                  <textarea 
+                    class="form-control" 
+                    id="editDescricao"
+                    [(ngModel)]="beneficioEditando.descricao"
+                    name="editDescricao"
+                    rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input 
+                      class="form-check-input" 
+                      type="checkbox" 
+                      id="editAtivo"
+                      [(ngModel)]="beneficioEditando.ativo"
+                      name="editAtivo">
+                    <label class="form-check-label" for="editAtivo">
+                      Benefício ativo
+                    </label>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" (click)="salvarEdicao()">
+                <i class="fas fa-save me-2"></i>
+                Salvar
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="cancelarEdicao()">
+                <i class="fas fa-times me-2"></i>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transfer Modal -->
+      <div *ngIf="showTransferForm" class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <i class="fas fa-exchange-alt me-2"></i>
+                Transferir Benefício
+              </h5>
+              <button type="button" class="btn-close" (click)="cancelarTransferencia()"></button>
+            </div>
+            <div class="modal-body">
+              <form (ngSubmit)="realizarTransferencia()">
+                <div class="mb-3">
+                  <label for="transferTo" class="form-label">Benefício Destino *</label>
+                  <select 
+                    class="form-select" 
+                    id="transferTo"
+                    [(ngModel)]="transferencia.toId"
+                    name="transferTo"
+                    required>
+                    <option value="">Selecione o benefício destino</option>
+                    <option 
+                      *ngFor="let beneficio of beneficiosDisponiveis" 
+                      [value]="beneficio.id">
+                      {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
+                    </option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="transferAmount" class="form-label">Valor da Transferência *</label>
+                  <input 
+                    type="number" 
+                    class="form-control" 
+                    id="transferAmount"
+                    [(ngModel)]="transferencia.amount"
+                    name="transferAmount"
+                    step="0.01"
+                    min="0.01"
+                    required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" (click)="realizarTransferencia()">
+                <i class="fas fa-exchange-alt me-2"></i>
+                Transferir
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="cancelarTransferencia()">
+                <i class="fas fa-times me-2"></i>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

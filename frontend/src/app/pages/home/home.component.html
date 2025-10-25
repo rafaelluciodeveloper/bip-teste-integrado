@@ -1,0 +1,126 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1 class="display-4 fw-bold mb-3">
+            <i class="fas fa-gift me-3"></i>
+            Sistema de Benefícios
+          </h1>
+          <p class="lead mb-4">
+            Gerencie benefícios de forma eficiente e segura. 
+            Transfira valores entre benefícios com total controle e transparência.
+          </p>
+          <div class="d-flex gap-3">
+            <a routerLink="/beneficios" class="btn btn-light btn-lg">
+              <i class="fas fa-list me-2"></i>
+              Gerenciar Benefícios
+            </a>
+            <a routerLink="/transferencias" class="btn btn-outline-light btn-lg">
+              <i class="fas fa-exchange-alt me-2"></i>
+              Transferências
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-4 text-center">
+          <i class="fas fa-chart-line fa-5x opacity-75"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section py-5">
+    <div class="container">
+      <div class="row text-center mb-5">
+        <div class="col-12">
+          <h2 class="display-5 fw-bold text-primary mb-3">Funcionalidades</h2>
+          <p class="lead text-muted">
+            Tudo que você precisa para gerenciar benefícios de forma profissional
+          </p>
+        </div>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="feature-card text-center p-4 h-100">
+            <div class="feature-icon mb-3">
+              <i class="fas fa-shield-alt fa-3x text-primary"></i>
+            </div>
+            <h4 class="fw-bold mb-3">Segurança</h4>
+            <p class="text-muted">
+              Transferências seguras com validações de negócio e controle de concorrência.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card text-center p-4 h-100">
+            <div class="feature-icon mb-3">
+              <i class="fas fa-bolt fa-3x text-success"></i>
+            </div>
+            <h4 class="fw-bold mb-3">Performance</h4>
+            <p class="text-muted">
+              Interface responsiva e rápida para uma experiência de usuário excepcional.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card text-center p-4 h-100">
+            <div class="feature-icon mb-3">
+              <i class="fas fa-cogs fa-3x text-info"></i>
+            </div>
+            <h4 class="fw-bold mb-3">Controle</h4>
+            <p class="text-muted">
+              Controle total sobre benefícios com validações e regras de negócio.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Active Benefits Section -->
+  <section class="benefits-section py-5 bg-light">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-12">
+          <h3 class="fw-bold text-primary mb-3">
+            <i class="fas fa-star me-2"></i>
+            Benefícios Ativos
+          </h3>
+          <p class="text-muted">
+            Veja os benefícios disponíveis no sistema
+          </p>
+        </div>
+      </div>
+      
+      <!-- Loading State -->
+      <app-loading *ngIf="loading" message="Carregando benefícios ativos..."></app-loading>
+      
+      <!-- Error State -->
+      <app-error *ngIf="error" [message]="error" [showRetry]="true" (retry)="carregarBeneficiosAtivos()"></app-error>
+      
+      <!-- Benefits List -->
+      <app-beneficio-list 
+        *ngIf="!loading && !error"
+        [beneficios]="beneficios"
+        [loading]="false"
+        [showActions]="false">
+      </app-beneficio-list>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section py-5 bg-primary text-white">
+    <div class="container text-center">
+      <h3 class="fw-bold mb-3">Pronto para começar?</h3>
+      <p class="lead mb-4">
+        Acesse o sistema e gerencie seus benefícios agora mesmo
+      </p>
+      <a routerLink="/beneficios" class="btn btn-light btn-lg">
+        <i class="fas fa-rocket me-2"></i>
+        Começar Agora
+      </a>
+    </div>
+  </section>
+</div>

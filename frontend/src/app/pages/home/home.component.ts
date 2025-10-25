@@ -1,0 +1,50 @@
+import { Component, OnInit } from '@angular/core';
+import { BeneficioService } from '../../core/services/beneficio.service';
+import { Beneficio } from '../../models/beneficio.model';
+
+/**
+ * Componente da página inicial.
+ * Smart Component - orquestra componentes e serviços.
+ * 
+ * @author Rafael Lucio
+ * @version 1.0
+ * @since 1.0
+ */
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
+})
+export class HomeComponent implements OnInit {
+  beneficios: Beneficio[] = [];
+  loading = false;
+  error: string | null = null;
+
+  constructor(private beneficioService: BeneficioService) { }
+
+  /**
+   * Inicializa o componente carregando os benefícios ativos.
+   */
+  ngOnInit(): void {
+    this.carregarBeneficiosAtivos();
+  }
+
+  /**
+   * Carrega apenas os benefícios ativos para exibição na home.
+   */
+  private carregarBeneficiosAtivos(): void {
+    this.loading = true;
+    this.error = null;
+    
+    this.beneficioService.getAtivos().subscribe({
+      next: (beneficios) => {
+        this.beneficios = beneficios;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Erro ao carregar benefícios: ' + err.message;
+        this.loading = false;
+      }
+    });
+  }
+}

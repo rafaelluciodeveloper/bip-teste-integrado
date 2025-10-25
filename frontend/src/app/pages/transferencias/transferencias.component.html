@@ -1,0 +1,167 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+          <i class="fas fa-exchange-alt me-2"></i>
+          Transferências
+        </h2>
+        <button 
+          class="btn btn-outline-primary" 
+          (click)="carregarBeneficios()"
+          [disabled]="loading">
+          <i class="fas fa-sync me-2"></i>
+          Atualizar
+        </button>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        {{ success }}
+        <button type="button" class="btn-close" (click)="success = null"></button>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error }}
+        <button type="button" class="btn-close" (click)="error = null"></button>
+      </div>
+
+      <!-- Transfer Form -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="fas fa-exchange-alt me-2"></i>
+            Nova Transferência
+          </h5>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="realizarTransferencia()">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="fromId" class="form-label">Benefício Origem *</label>
+                <select 
+                  class="form-select" 
+                  id="fromId"
+                  [(ngModel)]="transferencia.fromId"
+                  name="fromId"
+                  required>
+                  <option value="">Selecione o benefício origem</option>
+                  <option 
+                    *ngFor="let beneficio of beneficiosOrigem" 
+                    [value]="beneficio.id">
+                    {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
+                  </option>
+                </select>
+                <div *ngIf="beneficioOrigem" class="form-text text-info">
+                  <i class="fas fa-info-circle me-1"></i>
+                  Saldo disponível: {{ beneficioOrigem.valor | currency:'BRL':'symbol':'1.2-2' }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="toId" class="form-label">Benefício Destino *</label>
+                <select 
+                  class="form-select" 
+                  id="toId"
+                  [(ngModel)]="transferencia.toId"
+                  name="toId"
+                  required>
+                  <option value="">Selecione o benefício destino</option>
+                  <option 
+                    *ngFor="let beneficio of beneficiosDestino" 
+                    [value]="beneficio.id">
+                    {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
+                  </option>
+                </select>
+                <div *ngIf="beneficioDestino" class="form-text text-info">
+                  <i class="fas fa-info-circle me-1"></i>
+                  Saldo atual: {{ beneficioDestino.valor | currency:'BRL':'symbol':'1.2-2' }}
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <label for="amount" class="form-label">Valor da Transferência *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="amount"
+                  [(ngModel)]="transferencia.amount"
+                  name="amount"
+                  step="0.01"
+                  min="0.01"
+                  [max]="beneficioOrigem?.valor || 999999"
+                  required>
+                <div class="form-text">
+                  <i class="fas fa-info-circle me-1"></i>
+                  Valor máximo: {{ beneficioOrigem?.valor | currency:'BRL':'symbol':'1.2-2' || 'N/A' }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Resumo da Transferência</label>
+                <div class="transfer-summary p-3 bg-light rounded">
+                  <div *ngIf="beneficioOrigem && beneficioDestino && transferencia.amount > 0" class="text-center">
+                    <div class="mb-2">
+                      <strong>{{ beneficioOrigem.nome }}</strong>
+                      <br>
+                      <span class="text-danger">
+                        - {{ transferencia.amount | currency:'BRL':'symbol':'1.2-2' }}
+                      </span>
+                    </div>
+                    <div class="mb-2">
+                      <i class="fas fa-arrow-down text-primary"></i>
+                    </div>
+                    <div>
+                      <strong>{{ beneficioDestino.nome }}</strong>
+                      <br>
+                      <span class="text-success">
+                        + {{ transferencia.amount | currency:'BRL':'symbol':'1.2-2' }}
+                      </span>
+                    </div>
+                  </div>
+                  <div *ngIf="!beneficioOrigem || !beneficioDestino || transferencia.amount <= 0" class="text-muted text-center">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Selecione origem, destino e valor para ver o resumo
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4">
+              <button 
+                type="submit" 
+                class="btn btn-success me-2"
+                [disabled]="loading || !transferencia.fromId || !transferencia.toId || transferencia.amount <= 0">
+                <i class="fas fa-exchange-alt me-2" *ngIf="!loading"></i>
+                <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+                {{ loading ? 'Processando...' : 'Realizar Transferência' }}
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-secondary" 
+                (click)="resetarFormulario()"
+                [disabled]="loading">
+                <i class="fas fa-times me-2"></i>
+                Limpar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Benefits List -->
+      <div class="mt-5">
+        <h4 class="mb-3">
+          <i class="fas fa-list me-2"></i>
+          Benefícios Disponíveis
+        </h4>
+        <app-beneficio-list 
+          [beneficios]="beneficios"
+          [loading]="loading"
+          [showActions]="false">
+        </app-beneficio-list>
+      </div>
+    </div>
+  </div>
+</div>
