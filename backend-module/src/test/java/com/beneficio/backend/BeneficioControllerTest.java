@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -73,7 +74,7 @@ class BeneficioControllerTest {
         Beneficio beneficio = new Beneficio("Beneficio A", "Descrição A", new BigDecimal("1000.00"));
         beneficio.setId(1L);
         
-        when(beneficioEjbService.findById(1L)).thenReturn(Optional.of(beneficio));
+        when(beneficioEjb.findById(1L)).thenReturn(beneficio);
 
         mockMvc.perform(get("/api/v1/beneficios/1"))
                 .andExpect(status().isOk())
@@ -88,7 +89,7 @@ class BeneficioControllerTest {
      */
     @Test
     void testGetBeneficioByIdNotFound() throws Exception {
-        when(beneficioEjbService.findById(999L)).thenReturn(Optional.empty());
+        when(beneficioEjb.findById(999L)).thenReturn(null);
 
         mockMvc.perform(get("/api/v1/beneficios/999"))
                 .andExpect(status().isNotFound());
@@ -124,7 +125,7 @@ class BeneficioControllerTest {
         Beneficio beneficio = new Beneficio("Beneficio Atualizado", "Descrição Atualizada", new BigDecimal("1200.00"));
         beneficio.setId(1L);
         
-        when(beneficioEjbService.update(1L, any(Beneficio.class))).thenReturn(beneficio);
+        when(beneficioEjb.update(eq(1L), any(Beneficio.class))).thenReturn(beneficio);
 
         mockMvc.perform(put("/api/v1/beneficios/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +160,7 @@ class BeneficioControllerTest {
         
         doNothing().when(beneficioEjb).transfer(1L, 2L, new BigDecimal("100.00"));
 
-        mockMvc.perform(post("/api/v1/beneficios/transfer")
+        mockMvc.perform(post("/api/v1/beneficios/transferir")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -176,12 +177,14 @@ class BeneficioControllerTest {
         TransferenciaRequest request = new TransferenciaRequest(1L, 2L, new BigDecimal("100.00"));
         
         doThrow(new IllegalStateException("Saldo insuficiente"))
-                .when(beneficioEjbService).transfer(1L, 2L, new BigDecimal("100.00"));
+                .when(beneficioEjb).transfer(1L, 2L, new BigDecimal("100.00"));
 
-        mockMvc.perform(post("/api/v1/beneficios/transfer")
+        mockMvc.perform(post("/api/v1/beneficios/transferir")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Saldo insuficiente"));
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("Saldo insuficiente"))
+                .andExpect(jsonPath("$.error").value("Estado inválido"))
+                .andExpect(jsonPath("$.status").value(409));
     }
 }
