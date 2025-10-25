@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BeneficioService } from '../../core/services/beneficio.service';
 import { Beneficio } from '../../models/beneficio.model';
 
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private beneficioService: BeneficioService) { }
+  private readonly beneficioService = inject(BeneficioService);
 
   /**
    * Inicializa o componente carregando os benefícios ativos.

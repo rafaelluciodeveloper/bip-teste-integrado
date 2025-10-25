@@ -19,14 +19,14 @@
       <div *ngIf="success" class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fas fa-check-circle me-2"></i>
         {{ success }}
-        <button type="button" class="btn-close" (click)="success = null"></button>
+        <button type="button" class="btn-close" (click)="success = null" aria-label="Fechar"></button>
       </div>
 
       <!-- Error Message -->
       <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="fas fa-exclamation-triangle me-2"></i>
         {{ error }}
-        <button type="button" class="btn-close" (click)="error = null"></button>
+        <button type="button" class="btn-close" (click)="error = null" aria-label="Fechar"></button>
       </div>
 
       <!-- Transfer Form -->
@@ -100,7 +100,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <label class="form-label">Resumo da Transferência</label>
+                <div class="form-label">Resumo da Transferência</div>
                 <div class="transfer-summary p-3 bg-light rounded">
                   <div *ngIf="beneficioOrigem && beneficioDestino && transferencia.amount > 0" class="text-center">
                     <div class="mb-2">

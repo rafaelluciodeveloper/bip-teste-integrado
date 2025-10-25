@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -15,8 +15,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
   private readonly baseUrl = 'http://localhost:8080/api/v1';
-
-  constructor(private http: HttpClient) { }
+  private readonly http = inject(HttpClient);
 
   /**
    * Realiza requisição GET para a API.
@@ -35,7 +34,7 @@ export class ApiService {
    * @param data dados a serem enviados
    * @returns Observable com a resposta
    */
-  post<T>(endpoint: string, data: any): Observable<T> {
+  post<T>(endpoint: string, data: unknown): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, data);
   }
 
@@ -46,7 +45,7 @@ export class ApiService {
    * @param data dados a serem enviados
    * @returns Observable com a resposta
    */
-  put<T>(endpoint: string, data: any): Observable<T> {
+  put<T>(endpoint: string, data: unknown): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, data);
   }
 

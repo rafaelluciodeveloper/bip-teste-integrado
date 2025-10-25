@@ -2,11 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { BeneficioService } from './beneficio.service';
 import { ApiService } from './api.service';
-import { Beneficio, TransferenciaRequest } from '../../models/beneficio.model';
+import { Beneficio } from '../../models/beneficio.model';
 
 describe('BeneficioService', () => {
   let service: BeneficioService;
-  let apiService: ApiService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -15,7 +14,6 @@ describe('BeneficioService', () => {
       providers: [BeneficioService, ApiService]
     });
     service = TestBed.inject(BeneficioService);
-    apiService = TestBed.inject(ApiService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 

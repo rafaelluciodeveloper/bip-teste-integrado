@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { TransferenciaService } from '../../core/services/transferencia.service';
 import { Transferencia } from '../../core/models/transferencia.model';
 
@@ -21,7 +21,7 @@ export class HistoricoComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private transferenciaService: TransferenciaService) { }
+  private readonly transferenciaService = inject(TransferenciaService);
 
   ngOnInit(): void {
     this.carregarHistorico();

@@ -19,7 +19,7 @@
       <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
         <i class="fas fa-exclamation-triangle me-2"></i>
         {{ error }}
-        <button type="button" class="btn-close" (click)="error = null"></button>
+        <button type="button" class="btn-close" (click)="error = null" aria-label="Fechar"></button>
       </div>
 
       <!-- Create Form -->
@@ -115,7 +115,7 @@
                 <i class="fas fa-edit me-2"></i>
                 Editar Benefício
               </h5>
-              <button type="button" class="btn-close" (click)="cancelarEdicao()"></button>
+              <button type="button" class="btn-close" (click)="cancelarEdicao()" aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
               <form (ngSubmit)="salvarEdicao()">
@@ -188,7 +188,7 @@
                 <i class="fas fa-exchange-alt me-2"></i>
                 Transferir Benefício
               </h5>
-              <button type="button" class="btn-close" (click)="cancelarTransferencia()"></button>
+              <button type="button" class="btn-close" (click)="cancelarTransferencia()" aria-label="Fechar"></button>
             </div>
             <div class="modal-body">
               <form (ngSubmit)="realizarTransferencia()">

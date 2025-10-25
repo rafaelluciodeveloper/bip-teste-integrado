@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Beneficio, TransferenciaRequest } from '../../models/beneficio.model';
 import { ApiService } from './api.service';
@@ -15,8 +15,7 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class BeneficioService {
-
-  constructor(private apiService: ApiService) { }
+  private readonly apiService = inject(ApiService);
 
   /**
    * Busca todos os benefícios.

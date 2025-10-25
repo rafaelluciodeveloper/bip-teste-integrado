@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Transferencia } from '../models/transferencia.model';
@@ -15,10 +15,8 @@ import { Transferencia } from '../models/transferencia.model';
   providedIn: 'root'
 })
 export class TransferenciaService {
-
   private readonly API_URL = 'http://localhost:8080/api/v1/beneficios';
-
-  constructor(private http: HttpClient) { }
+  private readonly http = inject(HttpClient);
 
   /**
    * Lista o histórico de todas as transferências realizadas.

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { BeneficioService } from '../../core/services/beneficio.service';
 import { Beneficio, TransferenciaRequest } from '../../models/beneficio.model';
 import { Subscription } from 'rxjs';
@@ -43,7 +43,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
   };
   showTransferForm = false;
 
-  constructor(private beneficioService: BeneficioService) { }
+  private readonly beneficioService = inject(BeneficioService);
 
   /**
    * Inicializa o componente carregando os benefícios.

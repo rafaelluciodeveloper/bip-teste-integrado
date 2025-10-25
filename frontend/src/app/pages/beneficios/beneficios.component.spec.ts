@@ -4,7 +4,7 @@ import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BeneficiosComponent } from './beneficios.component';
 import { BeneficioService } from '../../core/services/beneficio.service';
-import { Beneficio, TransferenciaRequest } from '../../models/beneficio.model';
+import { Beneficio } from '../../models/beneficio.model';
 
 describe('BeneficiosComponent', () => {
   let component: BeneficiosComponent;
