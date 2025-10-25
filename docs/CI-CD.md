@@ -60,39 +60,7 @@ Este documento descreve o pipeline de CI/CD implementado para o projeto BIP Test
 
 ### Quick Start
 
-#### Linux/Mac
-```bash
-./scripts/dev-setup.sh
-```
-
-#### Windows
-```cmd
-scripts\dev-setup.bat
-```
-
-### Manual Setup
-
-1. **Database Setup**
-   ```bash
-   # H2 in-memory database is automatically configured
-   # No additional setup required
-   ```
-
-2. **Backend Development**
-   ```bash
-   cd backend-module
-   mvn spring-boot:run
-   ```
-
-3. **Frontend Development**
-   ```bash
-   cd frontend
-   npm start
-   ```
-
-## Docker Development
-
-### Using Docker Compose
+#### Docker Compose (Recomendado)
 ```bash
 # Start all services
 docker-compose up -d
@@ -104,15 +72,32 @@ docker-compose logs -f
 docker-compose down
 ```
 
-### Individual Services
-```bash
-# Build and run backend
-docker build -t bip-backend ./backend-module
-docker run -p 8080:8080 bip-backend
+### Manual Setup (Desenvolvimento Local)
 
-# Build and run frontend
-docker build -t bip-frontend ./frontend
-docker run -p 4200:4200 bip-frontend
+1. **Backend Development**
+   ```bash
+   cd backend-module
+   mvn spring-boot:run
+   ```
+
+2. **Frontend Development**
+   ```bash
+   cd frontend
+   npm start
+   ```
+
+## Docker Development
+
+### Using Docker Compose (Recomendado)
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
 ```
 
 ## Testing
