@@ -149,7 +149,6 @@ public class BeneficioService {
             throw new IllegalArgumentException(Messages.VALOR_DEVE_SER_POSITIVO);
         }
 
-        // Locking pessimista para evitar concorrência
         Beneficio from = em.find(Beneficio.class, fromId, LockModeType.PESSIMISTIC_WRITE);
         Beneficio to = em.find(Beneficio.class, toId, LockModeType.PESSIMISTIC_WRITE);
 
@@ -169,28 +168,23 @@ public class BeneficioService {
             throw new IllegalStateException(Messages.BENEFICIO_DESTINO_INATIVO);
         }
         
-        // Verificação de saldo com locking ativo
         if (from.getValor().compareTo(amount) < 0) {
             throw new IllegalStateException(String.format(Messages.SALDO_INSUFICIENTE, from.getValor(), amount));
         }
 
         try {
-            // Operação atômica com controle de versão
             from.setValor(from.getValor().subtract(amount));
             to.setValor(to.getValor().add(amount));
 
             em.merge(from);
             em.merge(to);
             
-            // Criar registro de transferência
             Transferencia transferencia = new Transferencia(from, to, amount);
             transferenciaRepository.save(transferencia);
             
-            // Flush para garantir persistência
             em.flush();
             
         } catch (OptimisticLockException e) {
-            // Rollback automático em caso de conflito de versão
             throw new IllegalStateException("Transferência falhou devido a conflito de concorrência. Tente novamente.");
         }
     }
