@@ -31,7 +31,7 @@ jobs:
     - name: Build and test ejb-module
       run: |
         cd ejb-module
-        mvn clean compile test
+        mvn clean compile test install
         
     - name: Build and test backend-module
       run: |
@@ -105,7 +105,7 @@ jobs:
     - name: Build EJB module
       run: |
         cd ejb-module
-        mvn clean package -DskipTests
+        mvn clean package install -DskipTests
         
     - name: Build Backend module
       run: |
@@ -188,7 +188,7 @@ jobs:
     - name: Build EJB JAR
       run: |
         cd ejb-module
-        mvn clean package -DskipTests
+        mvn clean package install -DskipTests
         
     - name: Build Backend JAR
       run: |
