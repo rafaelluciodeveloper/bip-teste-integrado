@@ -40,8 +40,7 @@ if %errorlevel% neq 0 (
 echo [SUCCESS] All requirements are met!
 
 REM Setup database
-echo [INFO] Setting up H2 database...
-if not exist "data" mkdir data
+echo [INFO] Setting up H2 in-memory database...
 echo [SUCCESS] Database setup completed!
 
 REM Build EJB module
@@ -120,6 +119,6 @@ echo [SUCCESS] Development environment setup completed!
 echo [INFO] You can now run:
 echo [INFO]   - Backend: cd backend-module ^&^& mvn spring-boot:run
 echo [INFO]   - Frontend: cd frontend ^&^& npm start
-echo [INFO]   - Database: java -jar h2-*.jar
+echo [INFO]   - Docker: docker-compose up -d
 
 pause

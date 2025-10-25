@@ -29,7 +29,6 @@ Este documento descreve o pipeline de CI/CD implementado para o projeto BIP Test
 
 ### 3. Integration Tests
 - **Dependencies**: test-backend, test-frontend
-- **Services**: H2 Database
 - **Steps**:
   - Build all modules
   - Run integration tests
@@ -75,8 +74,8 @@ scripts\dev-setup.bat
 
 1. **Database Setup**
    ```bash
-   # Start H2 database
-   java -jar h2-*.jar
+   # H2 in-memory database is automatically configured
+   # No additional setup required
    ```
 
 2. **Backend Development**
@@ -168,7 +167,6 @@ npm run test -- --coverage
 ### Health Checks
 - Backend: `http://localhost:8080/actuator/health`
 - Frontend: `http://localhost:4200/health`
-- Database: `http://localhost:8082`
 
 ### Metrics
 - Spring Boot Actuator
@@ -199,14 +197,12 @@ See `config/environment.properties` for configuration options.
    - npm: `npm ci`
 
 3. **Database Connection**
-   - Check H2 database is running
-   - Verify connection string
-   - Check firewall settings
+   - H2 in-memory database is automatically configured
+   - No external database setup required
 
 ### Logs
 - Backend: `backend-module/logs/`
 - Frontend: Browser console
-- Database: H2 console logs
 
 ## Best Practices
 

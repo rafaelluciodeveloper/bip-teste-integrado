@@ -64,10 +64,7 @@ check_requirements() {
 
 # Setup database
 setup_database() {
-    print_status "Setting up H2 database..."
-    
-    # Create data directory
-    mkdir -p data
+    print_status "Setting up H2 in-memory database..."
     
     # Initialize database schema
     if [ -f "db/schema.sql" ]; then
@@ -158,7 +155,7 @@ main() {
     print_status "You can now run:"
     print_status "  - Backend: cd backend-module && mvn spring-boot:run"
     print_status "  - Frontend: cd frontend && npm start"
-    print_status "  - Database: java -jar h2-*.jar"
+    print_status "  - Docker: docker-compose up -d"
 }
 
 # Run main function

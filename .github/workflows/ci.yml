@@ -78,17 +78,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test-backend, test-frontend]
     
-    services:
-      h2:
-        image: h2database/h2:latest
-        ports:
-          - 8082:8082
-        options: >-
-          --health-cmd "curl -f http://localhost:8082 || exit 1"
-          --health-interval 30s
-          --health-timeout 10s
-          --health-retries 3
-    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4

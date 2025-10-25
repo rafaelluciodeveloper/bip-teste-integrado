@@ -1,37 +1,22 @@
 version: '3.8'
 
 services:
-  # H2 Database for development
-  h2-database:
-    image: h2database/h2:latest
-    container_name: bip-h2-database
-    ports:
-      - "8082:8082"
-    environment:
-      - H2_OPTIONS=-web -webAllowOthers -tcp -tcpAllowOthers -browser
-    volumes:
-      - h2-data:/opt/h2-data
-    networks:
-      - bip-network
-
   # Backend Spring Boot Application
   backend:
     build:
       context: ./backend-module
       dockerfile: Dockerfile
-    container_name: bip-backend
+    container_name: backend
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:h2:tcp://h2-database:8082/./data/bip
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
       - SPRING_DATASOURCE_USERNAME=sa
       - SPRING_DATASOURCE_PASSWORD=
-    depends_on:
-      - h2-database
     networks:
-      - bip-network
+      - app-network
     volumes:
       - ./backend-module/target:/app/target
 
@@ -40,7 +25,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: bip-frontend
+    container_name: frontend
     ports:
       - "4200:4200"
     environment:
@@ -48,7 +33,7 @@ services:
     depends_on:
       - backend
     networks:
-      - bip-network
+      - app-network
     volumes:
       - ./frontend/src:/app/src
       - ./frontend/angular.json:/app/angular.json
@@ -57,7 +42,7 @@ services:
   # Nginx Reverse Proxy (Optional)
   nginx:
     image: nginx:alpine
-    container_name: bip-nginx
+    container_name: nginx
     ports:
       - "80:80"
     volumes:
@@ -66,11 +51,8 @@ services:
       - frontend
       - backend
     networks:
-      - bip-network
-
-volumes:
-  h2-data:
+      - app-network
 
 networks:
-  bip-network:
+  app-network:
     driver: bridge
