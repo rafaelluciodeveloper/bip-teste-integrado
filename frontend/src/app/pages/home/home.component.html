@@ -95,18 +95,23 @@
       </div>
       
       <!-- Loading State -->
-      <app-loading *ngIf="loading" message="Carregando benefícios ativos..."></app-loading>
+      @if (loading) {
+        <app-loading message="Carregando benefícios ativos..."></app-loading>
+      }
       
       <!-- Error State -->
-      <app-error *ngIf="error" [message]="error" [showRetry]="true" (retry)="carregarBeneficiosAtivos()"></app-error>
+      @if (error) {
+        <app-error [message]="error" [showRetry]="true" (retry)="carregarBeneficiosAtivos()"></app-error>
+      }
       
       <!-- Benefits List -->
-      <app-beneficio-list 
-        *ngIf="!loading && !error"
-        [beneficios]="beneficios"
-        [loading]="false"
-        [showActions]="false">
-      </app-beneficio-list>
+      @if (!loading && !error) {
+        <app-beneficio-list 
+          [beneficios]="beneficios"
+          [loading]="false"
+          [showActions]="false">
+        </app-beneficio-list>
+      }
     </div>
   </section>
 

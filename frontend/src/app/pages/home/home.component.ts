@@ -1,6 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { BeneficioService } from '../../core/services/beneficio.service';
 import { Beneficio } from '../../models/beneficio.model';
+import { BeneficioListComponent } from '../../shared/components/beneficio-list/beneficio-list.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { ErrorComponent } from '../../shared/components/error/error.component';
 
 /**
  * Componente da página inicial.
@@ -13,7 +17,9 @@ import { Beneficio } from '../../models/beneficio.model';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  imports: [CommonModule, BeneficioListComponent, LoadingComponent, ErrorComponent],
+  standalone: true
 })
 export class HomeComponent implements OnInit {
   beneficios: Beneficio[] = [];
@@ -32,7 +38,7 @@ export class HomeComponent implements OnInit {
   /**
    * Carrega apenas os benefícios ativos para exibição na home.
    */
-  private carregarBeneficiosAtivos(): void {
+  carregarBeneficiosAtivos(): void {
     this.loading = true;
     this.error = null;
     
