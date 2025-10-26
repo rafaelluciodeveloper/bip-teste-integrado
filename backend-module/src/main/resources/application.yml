@@ -7,6 +7,27 @@ spring:
       allowed-origins: "*"
       allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
       allowed-headers: "*"
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+    packages-to-scan: com.beneficio.ejb.entity
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
 server:
   port: 8080
@@ -21,5 +42,8 @@ springdoc:
 
 logging:
   level:
-    com.example.backend: DEBUG
+    com.beneficio.backend: DEBUG
+    com.beneficio.ejb: DEBUG
     org.springframework.web: DEBUG
+    org.hibernate: DEBUG
+    org.springframework.orm: DEBUG

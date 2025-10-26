@@ -8,7 +8,8 @@
     <persistence-unit name="beneficios-pu">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
-        <class>com.example.ejb.entity.Beneficio</class>
+        <class>com.beneficio.ejb.entity.Beneficio</class>
+        <class>com.beneficio.ejb.entity.Transferencia</class>
         
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
