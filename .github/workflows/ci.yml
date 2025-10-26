@@ -20,6 +20,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: maven
         
     - name: Cache Maven dependencies
       uses: actions/cache@v4
@@ -85,6 +86,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: maven
         
     - name: Set up Node.js
       uses: actions/setup-node@v4
@@ -137,11 +139,15 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: maven
+        cache: maven
         
-    - name: Set JAVA_HOME for Dependency Check
+    - name: Debug JAVA_HOME
       run: |
-        echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
-        echo "JAVA_HOME_17_X64=$JAVA_HOME_17_X64" >> $GITHUB_ENV
+        echo "JAVA_HOME is: $JAVA_HOME"
+        echo "JAVA_HOME_17_X64 is: $JAVA_HOME_17_X64"
+        ls -la $JAVA_HOME
+        $JAVA_HOME/bin/java -version
         
     - name: Run OWASP Dependency Check
       uses: dependency-check/Dependency-Check_Action@main
@@ -171,6 +177,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: maven
         
     - name: Set up Node.js
       uses: actions/setup-node@v4
