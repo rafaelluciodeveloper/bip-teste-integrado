@@ -24,7 +24,7 @@
         </div>
       }
 
-      <!-- Create Form -->
+  
       @if (showForm) {
         <div class="card mb-4">
         <div class="card-header">
@@ -100,7 +100,7 @@
       </div>
       }
 
-      <!-- Benefits List -->
+  
       <app-beneficio-list 
         [beneficios]="beneficios"
         [loading]="loading"
@@ -110,7 +110,7 @@
         (transfer)="iniciarTransferencia($event)">
       </app-beneficio-list>
 
-      <!-- Edit Modal -->
+   
       @if (showEditForm && beneficioEditando) {
         <div class="modal show d-block" tabindex="-1">
         <div class="modal-dialog">
@@ -185,7 +185,7 @@
       </div>
       }
 
-      <!-- Transfer Modal -->
+    
       @if (showTransferForm) {
         <div class="modal show d-block" tabindex="-1">
         <div class="modal-dialog">

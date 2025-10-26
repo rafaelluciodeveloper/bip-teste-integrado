@@ -140,7 +140,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-        cache: maven
         
     - name: Debug JAVA_HOME
       run: |

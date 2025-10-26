@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-// Importações dos componentes das páginas
 import { HomeComponent } from './pages/home/home.component';
 import { BeneficiosComponent } from './pages/beneficios/beneficios.component';
 import { TransferenciasComponent } from './pages/transferencias/transferencias.component';

@@ -1,5 +1,5 @@
 <div class="home-container">
-  <!-- Hero Section -->
+
   <section class="hero-section bg-primary text-white py-5">
     <div class="container">
       <div class="row align-items-center">
@@ -30,7 +30,7 @@
     </div>
   </section>
 
-  <!-- Features Section -->
+  
   <section class="features-section py-5">
     <div class="container">
       <div class="row text-center mb-5">
@@ -79,7 +79,7 @@
     </div>
   </section>
 
-  <!-- Active Benefits Section -->
+ 
   <section class="benefits-section py-5 bg-light">
     <div class="container">
       <div class="row mb-4">
@@ -94,17 +94,17 @@
         </div>
       </div>
       
-      <!-- Loading State -->
+   
       @if (loading) {
         <app-loading message="Carregando benefícios ativos..."></app-loading>
       }
       
-      <!-- Error State -->
+ 
       @if (error) {
         <app-error [message]="error" [showRetry]="true" (retry)="carregarBeneficiosAtivos()"></app-error>
       }
       
-      <!-- Benefits List -->
+    
       @if (!loading && !error) {
         <app-beneficio-list 
           [beneficios]="beneficios"
@@ -115,7 +115,7 @@
     </div>
   </section>
 
-  <!-- CTA Section -->
+
   <section class="cta-section py-5 bg-primary text-white">
     <div class="container text-center">
       <h3 class="fw-bold mb-3">Pronto para começar?</h3>

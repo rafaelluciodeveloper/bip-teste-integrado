@@ -4,7 +4,6 @@
     <p>Visualize todas as transferências realizadas no sistema</p>
   </div>
 
-  <!-- Loading -->
   @if (loading) {
     <div class="loading-container">
       <div class="spinner"></div>
@@ -12,7 +11,7 @@
     </div>
   }
 
-  <!-- Error -->
+
   @if (error) {
     <div class="error-container">
       <div class="error-message">
@@ -25,7 +24,7 @@
     </div>
   }
 
-  <!-- Empty State -->
+
   @if (!loading && !error && transferencias.length === 0) {
     <div class="empty-state">
       <div class="empty-icon">
@@ -36,7 +35,7 @@
     </div>
   }
 
-  <!-- Transferências List -->
+ 
   @if (!loading && !error && transferencias.length > 0) {
     <div class="transferencias-list">
       <div class="stats">
