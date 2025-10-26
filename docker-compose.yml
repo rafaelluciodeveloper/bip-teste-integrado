@@ -2,8 +2,8 @@ services:
   # Backend Spring Boot Application
   backend:
     build:
-      context: ./backend-module
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend-module/Dockerfile
     container_name: backend
     ports:
       - "8080:8080"

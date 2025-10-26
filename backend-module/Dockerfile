@@ -4,7 +4,7 @@ FROM maven:3.9.4-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom files
-COPY pom.xml .
+COPY backend-module/pom.xml .
 COPY ejb-module/pom.xml ./ejb-module/
 
 # Download dependencies
@@ -12,7 +12,7 @@ RUN mvn dependency:go-offline -B
 
 # Copy source code
 COPY ejb-module/src ./ejb-module/src
-COPY src ./src
+COPY backend-module/src ./src
 
 # Build the application
 RUN mvn clean package -DskipTests
