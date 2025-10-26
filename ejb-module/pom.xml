@@ -7,7 +7,7 @@
     <groupId>com.beneficio</groupId>
     <artifactId>ejb-module</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>ejb</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -16,43 +16,20 @@
     </properties>
 
     <dependencies>
-        <!-- Jakarta EE API -->
+        <!-- Jakarta EE API - provê EJB/JPA/Bean Validation -->
         <dependency>
-            <groupId>jakarta.ejb</groupId>
-            <artifactId>jakarta.ejb-api</artifactId>
-            <version>4.0.1</version>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
+            <scope>provided</scope>
         </dependency>
         
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>jakarta.inject</groupId>
-            <artifactId>jakarta.inject-api</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>4.0.1</version>
-        </dependency>
-        
-        <!-- Hibernate para JPA -->
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.2.7.Final</version>
-        </dependency>
-        
-        <!-- H2 Database -->
+        <!-- H2 Database para desenvolvimento -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>2.2.224</version>
+            <scope>provided</scope>
         </dependency>
         
         <!-- Lombok -->
@@ -84,8 +61,6 @@
             <version>5.3.1</version>
             <scope>test</scope>
         </dependency>
-        
-        <!-- Spring removido - EJB usa apenas Jakarta -->
     </dependencies>
 
     <build>
