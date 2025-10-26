@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Beneficio } from '../../../models/beneficio.model';
+import { BeneficioCardComponent } from '../beneficio-card/beneficio-card.component';
 
 /**
  * Componente de lista de benefícios.
@@ -12,7 +14,9 @@ import { Beneficio } from '../../../models/beneficio.model';
 @Component({
   selector: 'app-beneficio-list',
   templateUrl: './beneficio-list.component.html',
-  styleUrls: ['./beneficio-list.component.scss']
+  styleUrls: ['./beneficio-list.component.scss'],
+  imports: [CommonModule, BeneficioCardComponent],
+  standalone: true
 })
 export class BeneficioListComponent {
   @Input() beneficios: Beneficio[] = [];

@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Beneficio } from '../../../models/beneficio.model';
 
 /**
@@ -12,7 +13,9 @@ import { Beneficio } from '../../../models/beneficio.model';
 @Component({
   selector: 'app-beneficio-card',
   templateUrl: './beneficio-card.component.html',
-  styleUrls: ['./beneficio-card.component.scss']
+  styleUrls: ['./beneficio-card.component.scss'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class BeneficioCardComponent {
   @Input() beneficio!: Beneficio;
