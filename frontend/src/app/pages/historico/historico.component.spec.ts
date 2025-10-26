@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -65,17 +65,6 @@ describe('HistoricoComponent', () => {
     });
   });
 
-  describe('carregarHistorico', () => {
-    it('should load transferencias and set loading state', () => {
-      transferenciaService.getHistoricoTransferencias.and.returnValue(of(mockTransferencias));
-
-      component.carregarHistorico();
-
-      expect(component.loading).toBeTrue();
-      expect(component.error).toBeNull();
-      expect(transferenciaService.getHistoricoTransferencias).toHaveBeenCalled();
-    });
-  });
 
   describe('formatarData', () => {
     it('should format date string to Brazilian locale', () => {

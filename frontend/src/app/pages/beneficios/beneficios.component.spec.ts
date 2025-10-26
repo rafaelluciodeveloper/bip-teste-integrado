@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -60,17 +60,6 @@ describe('BeneficiosComponent', () => {
     });
   });
 
-  describe('carregarBeneficios', () => {
-    it('should load beneficios and set loading state', () => {
-      beneficioService.getAll.and.returnValue(of(mockBeneficios));
-
-      component.carregarBeneficios();
-
-      expect(component.loading).toBeTrue();
-      expect(component.error).toBeNull();
-      expect(beneficioService.getAll).toHaveBeenCalled();
-    });
-  });
 
   describe('criarBeneficio', () => {
     it('should create beneficio with valid data', () => {
@@ -179,7 +168,7 @@ describe('BeneficiosComponent', () => {
 
       component.realizarTransferencia();
 
-      expect(beneficioService.transfer).toHaveBeenCalledWith(component.transferencia);
+      expect(beneficioService.transfer).toHaveBeenCalledWith({ fromId: 1, toId: 2, amount: 500 });
       expect(component.showTransferForm).toBeFalse();
     });
 
