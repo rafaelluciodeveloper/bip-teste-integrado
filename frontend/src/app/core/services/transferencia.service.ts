@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Transferencia } from '../models/transferencia.model';
+import { ApiService } from './api.service';
 
 /**
  * Serviço responsável pelas operações relacionadas às transferências.
@@ -15,8 +15,7 @@ import { Transferencia } from '../models/transferencia.model';
   providedIn: 'root'
 })
 export class TransferenciaService {
-  private readonly API_URL = 'http://localhost:8080/api/v1/beneficios';
-  private readonly http = inject(HttpClient);
+  private readonly apiService = inject(ApiService);
 
   /**
    * Lista o histórico de todas as transferências realizadas.
@@ -24,7 +23,7 @@ export class TransferenciaService {
    * @returns Observable com lista de transferências
    */
   getHistoricoTransferencias(): Observable<Transferencia[]> {
-    return this.http.get<Transferencia[]>(`${this.API_URL}/transferencias/historico`);
+    return this.apiService.get<Transferencia[]>('/beneficios/transferencias/historico');
   }
 
   /**
@@ -34,6 +33,6 @@ export class TransferenciaService {
    * @returns Observable com lista de transferências do benefício
    */
   getTransferenciasByBeneficio(beneficioId: number): Observable<Transferencia[]> {
-    return this.http.get<Transferencia[]>(`${this.API_URL}/${beneficioId}/transferencias`);
+    return this.apiService.get<Transferencia[]>(`/beneficios/${beneficioId}/transferencias`);
   }
 }
