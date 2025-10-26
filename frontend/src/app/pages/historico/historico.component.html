@@ -1,87 +1,96 @@
 <div class="historico-container">
   <div class="header">
-    <h1>📊 Histórico de Transferências</h1>
+    <h1>Histórico de Transferências</h1>
     <p>Visualize todas as transferências realizadas no sistema</p>
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading" class="loading-container">
-    <div class="spinner"></div>
-    <p>Carregando histórico...</p>
-  </div>
+  @if (loading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Carregando histórico...</p>
+    </div>
+  }
 
   <!-- Error -->
-  <div *ngIf="error" class="error-container">
-    <div class="error-message">
-      <i class="fas fa-exclamation-triangle"></i>
-      <p>{{ error }}</p>
-      <button class="btn btn-primary" (click)="carregarHistorico()">
-        <i class="fas fa-refresh"></i> Tentar Novamente
-      </button>
-    </div>
-  </div>
-
-  <!-- Empty State -->
-  <div *ngIf="!loading && !error && transferencias.length === 0" class="empty-state">
-    <div class="empty-icon">
-      <i class="fas fa-exchange-alt"></i>
-    </div>
-    <h3>Nenhuma transferência encontrada</h3>
-    <p>Não há transferências registradas no sistema ainda.</p>
-  </div>
-
-  <!-- Transferências List -->
-  <div *ngIf="!loading && !error && transferencias.length > 0" class="transferencias-list">
-    <div class="stats">
-      <div class="stat-item">
-        <span class="stat-number">{{ transferencias.length }}</span>
-        <span class="stat-label">Transferências</span>
+  @if (error) {
+    <div class="error-container">
+      <div class="error-message">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>{{ error }}</p>
+        <button class="btn btn-primary" (click)="carregarHistorico()">
+          <i class="fas fa-refresh"></i> Tentar Novamente
+        </button>
       </div>
     </div>
+  }
 
-    <div class="table-container">
-      <table class="transferencias-table">
-        <thead>
-          <tr>
-            <th>Data/Hora</th>
-            <th>Origem</th>
-            <th>Destino</th>
-            <th>Valor</th>
-            <th>Observações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let transferencia of transferencias" class="transferencia-row">
-            <td class="data-cell">
-              <i class="fas fa-clock"></i>
-              {{ formatarData(transferencia.dataTransferencia) }}
-            </td>
-            <td class="origem-cell">
-              <div class="beneficio-info">
-                <span class="beneficio-nome">{{ transferencia.beneficioOrigem.nome }}</span>
-                <span class="beneficio-id">ID: {{ transferencia.beneficioOrigem.id }}</span>
-              </div>
-            </td>
-            <td class="destino-cell">
-              <div class="beneficio-info">
-                <span class="beneficio-nome">{{ transferencia.beneficioDestino.nome }}</span>
-                <span class="beneficio-id">ID: {{ transferencia.beneficioDestino.id }}</span>
-              </div>
-            </td>
-            <td class="valor-cell">
-              <span class="valor">{{ formatarValor(transferencia.valor) }}</span>
-            </td>
-            <td class="observacoes-cell">
-              <span *ngIf="transferencia.observacoes; else semObservacoes">
-                {{ transferencia.observacoes }}
-              </span>
-              <ng-template #semObservacoes>
-                <span class="sem-observacoes">-</span>
-              </ng-template>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <!-- Empty State -->
+  @if (!loading && !error && transferencias.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-exchange-alt"></i>
+      </div>
+      <h3>Nenhuma transferência encontrada</h3>
+      <p>Não há transferências registradas no sistema ainda.</p>
     </div>
-  </div>
+  }
+
+  <!-- Transferências List -->
+  @if (!loading && !error && transferencias.length > 0) {
+    <div class="transferencias-list">
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ transferencias.length }}</span>
+          <span class="stat-label">Transferências</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="transferencias-table">
+          <thead>
+            <tr>
+              <th>Data/Hora</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Valor</th>
+              <th>Observações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (transferencia of transferencias; track transferencia.id) {
+              <tr class="transferencia-row">
+                <td class="data-cell">
+                  <i class="fas fa-clock"></i>
+                  {{ formatarData(transferencia.dataTransferencia) }}
+                </td>
+                <td class="origem-cell">
+                  <div class="beneficio-info">
+                    <span class="beneficio-nome">{{ transferencia.beneficioOrigem.nome }}</span>
+                    <span class="beneficio-id">ID: {{ transferencia.beneficioOrigem.id }}</span>
+                  </div>
+                </td>
+                <td class="destino-cell">
+                  <div class="beneficio-info">
+                    <span class="beneficio-nome">{{ transferencia.beneficioDestino.nome }}</span>
+                    <span class="beneficio-id">ID: {{ transferencia.beneficioDestino.id }}</span>
+                  </div>
+                </td>
+                <td class="valor-cell">
+                  <span class="valor">{{ formatarValor(transferencia.valor) }}</span>
+                </td>
+                <td class="observacoes-cell">
+                  @if (transferencia.observacoes) {
+                    <span>{{ transferencia.observacoes }}</span>
+                  } @else {
+                    <span class="sem-observacoes">-</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
 </div>
