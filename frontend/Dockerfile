@@ -13,7 +13,7 @@ RUN npm ci --only=production
 COPY . .
 
 # Build the application
-RUN npm run build --prod
+RUN npm run build
 
 # Runtime stage with Nginx
 FROM nginx:alpine
@@ -22,7 +22,7 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy built application
-COPY --from=build /app/dist/bip-teste-integrado /usr/share/nginx/html
+COPY --from=build /app/dist/beneficios-frontend /usr/share/nginx/html
 
 # Expose port
 EXPOSE 4200
