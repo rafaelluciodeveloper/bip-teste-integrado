@@ -7,12 +7,12 @@ WORKDIR /app
 COPY backend-module/pom.xml .
 COPY ejb-module/pom.xml ./ejb-module/
 
-# Download dependencies
-RUN mvn dependency:go-offline -B
-
 # Copy source code
 COPY ejb-module/src ./ejb-module/src
 COPY backend-module/src ./src
+
+# Install EJB module first
+RUN cd ejb-module && mvn clean install -DskipTests
 
 # Build the application
 RUN mvn clean package -DskipTests
