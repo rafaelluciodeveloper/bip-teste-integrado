@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { BeneficioService } from '../../core/services/beneficio.service';
 import { Beneficio, TransferenciaRequest } from '../../models/beneficio.model';
 import { Subscription } from 'rxjs';
+import { BeneficioListComponent } from '../../shared/components/beneficio-list/beneficio-list.component';
 
 /**
  * Componente de gerenciamento de transferências.
@@ -14,7 +17,9 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-transferencias',
   templateUrl: './transferencias.component.html',
-  styleUrls: ['./transferencias.component.scss']
+  styleUrls: ['./transferencias.component.scss'],
+  imports: [CommonModule, FormsModule, BeneficioListComponent],
+  standalone: true
 })
 export class TransferenciasComponent implements OnInit, OnDestroy {
   beneficios: Beneficio[] = [];

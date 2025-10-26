@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { TransferenciaService } from '../../core/services/transferencia.service';
 import { Transferencia } from '../../core/models/transferencia.model';
 
@@ -13,7 +14,9 @@ import { Transferencia } from '../../core/models/transferencia.model';
 @Component({
   selector: 'app-historico',
   templateUrl: './historico.component.html',
-  styleUrls: ['./historico.component.scss']
+  styleUrls: ['./historico.component.scss'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class HistoricoComponent implements OnInit {
 
