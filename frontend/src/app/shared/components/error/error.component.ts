@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 /**
  * Componente de erro genérico.
@@ -11,7 +12,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-error',
   templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+  styleUrls: ['./error.component.scss'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class ErrorComponent {
   @Input() message = 'Ocorreu um erro inesperado';
