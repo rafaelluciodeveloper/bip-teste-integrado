@@ -14,8 +14,8 @@ COPY backend-module/src ./src
 # Install EJB module first
 RUN cd ejb-module && mvn clean install -DskipTests
 
-# Build the application
-RUN mvn clean package -DskipTests
+# Build the application with EJB module
+RUN mvn clean package -DskipTests -Dmaven.test.skip=true
 
 # Runtime stage
 FROM eclipse-temurin:17-jre
