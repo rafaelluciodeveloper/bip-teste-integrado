@@ -150,11 +150,14 @@ jobs:
         
     - name: Run OWASP Dependency Check
       uses: dependency-check/Dependency-Check_Action@main
+      env:
+        JAVA_HOME: /opt/jdk-17
       with:
         project: 'bip-teste-integrado'
-        path: '.'
+        path: .
         format: 'HTML'
         out: 'dependency-check-report'
+        args: '--noupdate'
         
     - name: Upload security report
       uses: actions/upload-artifact@v4
