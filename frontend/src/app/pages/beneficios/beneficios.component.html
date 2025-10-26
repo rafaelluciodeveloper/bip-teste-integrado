@@ -16,14 +16,17 @@
       </div>
 
       <!-- Error Message -->
-      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        {{ error }}
-        <button type="button" class="btn-close" (click)="error = null" aria-label="Fechar"></button>
-      </div>
+      @if (error) {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          {{ error }}
+          <button type="button" class="btn-close" (click)="error = null" aria-label="Fechar"></button>
+        </div>
+      }
 
       <!-- Create Form -->
-      <div *ngIf="showForm" class="card mb-4">
+      @if (showForm) {
+        <div class="card mb-4">
         <div class="card-header">
           <h5 class="mb-0">
             <i class="fas fa-plus me-2"></i>
@@ -95,6 +98,7 @@
           </form>
         </div>
       </div>
+      }
 
       <!-- Benefits List -->
       <app-beneficio-list 
@@ -107,7 +111,8 @@
       </app-beneficio-list>
 
       <!-- Edit Modal -->
-      <div *ngIf="showEditForm && beneficioEditando" class="modal show d-block" tabindex="-1">
+      @if (showEditForm && beneficioEditando) {
+        <div class="modal show d-block" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -178,9 +183,11 @@
           </div>
         </div>
       </div>
+      }
 
       <!-- Transfer Modal -->
-      <div *ngIf="showTransferForm" class="modal show d-block" tabindex="-1">
+      @if (showTransferForm) {
+        <div class="modal show d-block" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -201,11 +208,11 @@
                     name="transferTo"
                     required>
                     <option value="">Selecione o benefício destino</option>
-                    <option 
-                      *ngFor="let beneficio of beneficiosDisponiveis" 
-                      [value]="beneficio.id">
-                      {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
-                    </option>
+                    @for (beneficio of beneficiosDisponiveis; track beneficio.id) {
+                      <option [value]="beneficio.id">
+                        {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
+                      </option>
+                    }
                   </select>
                 </div>
                 <div class="mb-3">
@@ -235,6 +242,4 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+  }
