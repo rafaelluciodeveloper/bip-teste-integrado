@@ -8,11 +8,6 @@ spring:
       allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
       allowed-headers: "*"
   
-  # Desabilitar JPA - toda lógica de persistência fica no EJB
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: false
 
 server:
   port: 8080
