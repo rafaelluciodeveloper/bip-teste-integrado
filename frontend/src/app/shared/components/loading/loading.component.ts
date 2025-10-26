@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 /**
  * Componente de loading genérico.
@@ -11,7 +12,9 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.scss']
+  styleUrls: ['./loading.component.scss'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class LoadingComponent {
   @Input() message = 'Carregando...';
