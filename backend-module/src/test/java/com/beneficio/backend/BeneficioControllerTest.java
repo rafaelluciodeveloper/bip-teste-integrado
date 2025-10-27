@@ -1,7 +1,7 @@
 package com.beneficio.backend;
 
 import com.beneficio.backend.dto.TransferenciaRequest;
-import com.beneficio.ejb.BeneficioEjb;
+import com.beneficio.ejb.BeneficioEjbLocal;
 import com.beneficio.ejb.entity.Beneficio;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -14,10 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -38,7 +36,7 @@ class BeneficioControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private BeneficioEjb beneficioEjb;
+    private BeneficioEjbLocal beneficioEjb;
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -16,7 +16,7 @@
     <module>
         <web>
             <web-uri>com.beneficio-backend-module-1.0.0.war</web-uri>
-            <context-root>/api</context-root>
+            <context-root>/beneficio-api</context-root>
         </web>
     </module>
 

@@ -44,11 +44,11 @@
                             <groupId>com.beneficio</groupId>
                             <artifactId>ejb-module</artifactId>
                         </ejbModule>
-                        <webModule>
-                            <groupId>com.beneficio</groupId>
-                            <artifactId>backend-module</artifactId>
-                            <contextRoot>/api</contextRoot>
-                        </webModule>
+                <webModule>
+                    <groupId>com.beneficio</groupId>
+                    <artifactId>backend-module</artifactId>
+                    <contextRoot>/beneficio-api</contextRoot>
+                </webModule>
                     </modules>
                     <displayName>Beneficios EAR</displayName>
                     <description>Sistema de Benefícios - Enterprise Application</description>

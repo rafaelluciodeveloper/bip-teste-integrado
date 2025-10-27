@@ -37,11 +37,11 @@ describe('TransferenciaService', () => {
         }
       ];
 
-      service.getHistoricoTransferencias().subscribe(transferencias => {
+      service.getHistoricoTransferencias().subscribe((transferencias: Transferencia[]) => {
         expect(transferencias).toEqual(mockTransferencias);
       });
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios/transferencias/historico');
+      const req = httpMock.expectOne('/api/v1/beneficios/transferencias/historico');
       expect(req.request.method).toBe('GET');
       req.flush(mockTransferencias);
     });
@@ -49,7 +49,7 @@ describe('TransferenciaService', () => {
 
   describe('getTransferenciasByBeneficio', () => {
     it('should return transferencias for specific beneficio', () => {
-      const beneficioId = 1;
+      const beneficioId: number = 1;
       const mockTransferencias: Transferencia[] = [
         {
           id: 1,
@@ -61,11 +61,11 @@ describe('TransferenciaService', () => {
         }
       ];
 
-      service.getTransferenciasByBeneficio(beneficioId).subscribe(transferencias => {
+      service.getTransferenciasByBeneficio(beneficioId).subscribe((transferencias: Transferencia[]) => {
         expect(transferencias).toEqual(mockTransferencias);
       });
 
-      const req = httpMock.expectOne(`http://localhost:8080/api/v1/beneficios/${beneficioId}/transferencias`);
+      const req = httpMock.expectOne(`/api/v1/beneficios/${beneficioId}/transferencias`);
       expect(req.request.method).toBe('GET');
       req.flush(mockTransferencias);
     });

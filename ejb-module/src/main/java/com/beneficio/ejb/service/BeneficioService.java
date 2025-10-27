@@ -5,6 +5,8 @@ import com.beneficio.ejb.entity.Beneficio;
 import com.beneficio.ejb.entity.Transferencia;
 import com.beneficio.ejb.repository.BeneficioRepository;
 import com.beneficio.ejb.repository.TransferenciaRepository;
+
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -26,6 +28,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Stateless
+@PermitAll
 public class BeneficioService {
 
     @Inject

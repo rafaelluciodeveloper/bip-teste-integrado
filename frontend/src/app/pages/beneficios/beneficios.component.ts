@@ -25,6 +25,8 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
   beneficios: Beneficio[] = [];
   loading = false;
   error: string | null = null;
+  // Tipo de alerta (danger|warning). Usado para diferenciar erros de negócio.
+  alertType: 'danger' | 'warning' = 'danger';
   private subscriptions = new Subscription();
 
   // Formulário de criação
@@ -158,9 +160,18 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
     const sub = this.beneficioService.delete(beneficio.id!).subscribe({
       next: () => {
         this.carregarBeneficios();
+        this.alertType = 'danger';
+        this.error = null;
       },
       error: (err) => {
-        this.error = 'Erro ao excluir benefício: ' + err.message;
+        // Se for conflito (409), exibir mensagem amigável como warning
+        if (err.status === 409) {
+          this.alertType = 'warning';
+          this.error = (err.error?.message) ?? 'Não é possível excluir: existem transferências associadas.';
+        } else {
+          this.alertType = 'danger';
+          this.error = 'Erro ao excluir benefício: ' + ((err.error?.message) ?? err.message);
+        }
       }
     });
     

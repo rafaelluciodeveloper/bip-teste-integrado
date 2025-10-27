@@ -45,7 +45,7 @@ public class BeneficioController {
      * @return ResponseEntity contendo o benefício ou 404 se não encontrado
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Beneficio> obterPorId(@PathVariable Long id) {
+    public ResponseEntity<Beneficio> obterPorId(@PathVariable("id") Long id) {
         Beneficio beneficio = beneficioEjb.findById(id);
         return beneficio != null ? ResponseEntity.ok(beneficio) : ResponseEntity.notFound().build();
     }
@@ -70,7 +70,7 @@ public class BeneficioController {
      * @return ResponseEntity contendo o benefício atualizado ou 404 se não encontrado
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Beneficio> atualizar(@PathVariable Long id, @Valid @RequestBody Beneficio beneficio) {
+    public ResponseEntity<Beneficio> atualizar(@PathVariable("id") Long id, @Valid @RequestBody Beneficio beneficio) {
         Beneficio updatedBeneficio = beneficioEjb.update(id, beneficio);
         return ResponseEntity.ok(updatedBeneficio);
     }
@@ -82,7 +82,7 @@ public class BeneficioController {
      * @return ResponseEntity indicando sucesso ou erro
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable("id") Long id) {
         beneficioEjb.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -105,7 +105,7 @@ public class BeneficioController {
      * @return ResponseEntity contendo a lista de benefícios encontrados
      */
     @GetMapping("/buscar")
-    public ResponseEntity<List<Beneficio>> buscar(@RequestParam String nome) {
+    public ResponseEntity<List<Beneficio>> buscar(@RequestParam("nome") String nome) {
         List<Beneficio> beneficios = beneficioEjb.searchByNome(nome);
         return ResponseEntity.ok(beneficios);
     }
@@ -140,7 +140,7 @@ public class BeneficioController {
      * @return ResponseEntity contendo a lista de transferências do benefício
      */
     @GetMapping("/{beneficioId}/transferencias")
-    public ResponseEntity<List<Transferencia>> obterTransferenciasPorBeneficio(@PathVariable Long beneficioId) {
+    public ResponseEntity<List<Transferencia>> obterTransferenciasPorBeneficio(@PathVariable("beneficioId") Long beneficioId) {
         List<Transferencia> transferencias = beneficioEjb.getTransferenciasByBeneficio(beneficioId);
         return ResponseEntity.ok(transferencias);
     }

@@ -36,7 +36,7 @@ describe('BeneficioService', () => {
         expect(beneficios).toEqual(mockBeneficios);
       });
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios');
+      const req = httpMock.expectOne('/api/v1/beneficios');
       expect(req.request.method).toBe('GET');
       req.flush(mockBeneficios);
     });
@@ -50,7 +50,7 @@ describe('BeneficioService', () => {
         expect(beneficio).toEqual(mockBeneficio);
       });
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios/1');
+      const req = httpMock.expectOne('/api/v1/beneficios/1');
       expect(req.request.method).toBe('GET');
       req.flush(mockBeneficio);
     });
@@ -65,7 +65,7 @@ describe('BeneficioService', () => {
         expect(beneficio).toEqual(createdBeneficio);
       });
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios');
+      const req = httpMock.expectOne('/api/v1/beneficios');
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(newBeneficio);
       req.flush(createdBeneficio);
@@ -80,7 +80,7 @@ describe('BeneficioService', () => {
         expect(beneficio).toEqual(updatedBeneficio);
       });
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios/1');
+      const req = httpMock.expectOne('/api/v1/beneficios/1');
       expect(req.request.method).toBe('PUT');
       expect(req.request.body).toEqual(updatedBeneficio);
       req.flush(updatedBeneficio);
@@ -106,7 +106,7 @@ describe('BeneficioService', () => {
         expect(result).toBe(response);
       });
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios/transferir');
+      const req = httpMock.expectOne('/api/v1/beneficios/transferir');
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(transferencia);
       req.flush(response);
@@ -123,7 +123,7 @@ describe('BeneficioService', () => {
         expect(beneficios).toEqual(mockBeneficios);
       });
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios/ativos');
+      const req = httpMock.expectOne('/api/v1/beneficios/ativos');
       expect(req.request.method).toBe('GET');
       req.flush(mockBeneficios);
     });
@@ -140,7 +140,7 @@ describe('BeneficioService', () => {
         expect(beneficios).toEqual(mockBeneficios);
       });
 
-      const req = httpMock.expectOne(`http://localhost:8080/api/v1/beneficios/buscar?nome=${encodeURIComponent(searchTerm)}`);
+      const req = httpMock.expectOne(`/api/v1/beneficios/buscar?nome=${encodeURIComponent(searchTerm)}`);
       expect(req.request.method).toBe('GET');
       req.flush(mockBeneficios);
     });

@@ -6,7 +6,7 @@ services:
       dockerfile: ./ear-module/Dockerfile
     container_name: wildfly
     ports:
-      - "8080:8080"
+      - "8081:8080"
       - "9990:9990"
     environment:
       - WILDFLY_ADMIN_USER=admin
@@ -14,7 +14,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/beneficio-api/api-docs"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile
     container_name: nginx
     ports:
-      - "80:80"
+      - "8082:80"
     depends_on:
       - wildfly
     networks:

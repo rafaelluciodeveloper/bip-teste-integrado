@@ -5,6 +5,7 @@ import { Beneficio } from '../../models/beneficio.model';
 import { BeneficioListComponent } from '../../shared/components/beneficio-list/beneficio-list.component';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ErrorComponent } from '../../shared/components/error/error.component';
+import { RouterLink } from '@angular/router';
 
 /**
  * Componente da página inicial.
@@ -18,7 +19,7 @@ import { ErrorComponent } from '../../shared/components/error/error.component';
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [CommonModule, BeneficioListComponent, LoadingComponent, ErrorComponent],
+  imports: [CommonModule, BeneficioListComponent, LoadingComponent, ErrorComponent, RouterLink],
   standalone: true
 })
 export class HomeComponent implements OnInit {

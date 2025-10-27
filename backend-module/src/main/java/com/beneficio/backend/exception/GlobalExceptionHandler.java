@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.ejb.EJBException;
 
 /**
  * Handler global de exceções para padronizar respostas REST.
@@ -97,6 +98,38 @@ public class GlobalExceptionHandler {
         response.put("message", "Ocorreu um erro inesperado. Tente novamente mais tarde.");
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    /**
+     * Trata EJBException vindas do módulo EJB, descompactando a causa raiz
+     * para responder com o status e mensagem adequados.
+     *
+     * @param ex exceção EJB
+     * @return resposta HTTP conforme a causa raiz
+     */
+    @ExceptionHandler(EJBException.class)
+    public ResponseEntity<Map<String, Object>> handleEJBException(EJBException ex) {
+        Throwable cause = ex.getCause();
+        if (cause instanceof IllegalStateException ise) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "Operação não permitida");
+            response.put("message", ise.getMessage());
+            response.put("status", HttpStatus.CONFLICT.value());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        }
+        if (cause instanceof IllegalArgumentException iae) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "Argumento inválido");
+            response.put("message", iae.getMessage());
+            response.put("status", HttpStatus.BAD_REQUEST.value());
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("error", "Erro interno do servidor");
+        response.put("message", "Ocorreu um erro inesperado. Tente novamente mais tarde.");
+        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

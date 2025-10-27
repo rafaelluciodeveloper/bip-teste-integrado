@@ -74,7 +74,7 @@ export class BeneficioService {
    * @returns Observable com mensagem de sucesso
    */
   transfer(transferencia: TransferenciaRequest): Observable<string> {
-    return this.apiService.post<string>('/beneficios/transferir', transferencia);
+    return this.apiService.postText('/beneficios/transferir', transferencia);
   }
 
   /**

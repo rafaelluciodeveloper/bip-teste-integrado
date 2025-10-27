@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 /**
  * Componente de cabeçalho da aplicação.
@@ -12,7 +13,8 @@ import { Component } from '@angular/core';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  standalone: true
+  standalone: true,
+  imports: [RouterLink, RouterLinkActive]
 })
 export class HeaderComponent {
   title = 'Sistema de Benefícios';

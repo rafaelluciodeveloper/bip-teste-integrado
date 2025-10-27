@@ -8,6 +8,7 @@ import com.beneficio.ejb.entity.Beneficio;
 import com.beneficio.ejb.entity.Transferencia;
 import com.beneficio.ejb.service.BeneficioService;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Local;
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
@@ -26,6 +27,7 @@ import javax.naming.NamingException;
 @Stateless
 @Local(BeneficioEjbLocal.class)
 @Remote(BeneficioEjbRemote.class)
+@PermitAll
 public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
 
     private BeneficioService beneficioService;

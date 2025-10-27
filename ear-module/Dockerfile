@@ -39,9 +39,12 @@ COPY --from=build /app/ear-module/target/*.ear /opt/jboss/wildfly/standalone/dep
 # Expose ports
 EXPOSE 8080 9990
 
+# Create WildFly management user (admin/adminadmin)
+RUN /opt/jboss/wildfly/bin/add-user.sh admin adminadmin --silent
+
 # Health check using wget (already available in WildFly)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/api/v1/beneficios || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/beneficio-api/api-docs || exit 1
 
 # Start WildFly
 CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]

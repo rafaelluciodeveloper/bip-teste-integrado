@@ -40,6 +40,18 @@ export class ApiService {
   }
 
   /**
+   * Realiza requisição POST esperando resposta em texto.
+   * Útil para endpoints que retornam apenas uma mensagem (text/plain).
+   *
+   * @param endpoint endpoint da API
+   * @param data dados a serem enviados
+   * @returns Observable com a resposta em texto
+   */
+  postText(endpoint: string, data: unknown): Observable<string> {
+    return this.http.post(`${this.baseUrl}${endpoint}`, data, { responseType: 'text' });
+  }
+
+  /**
    * Realiza requisição PUT para a API.
    * 
    * @param endpoint endpoint da API

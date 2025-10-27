@@ -2,6 +2,8 @@ package com.beneficio.ejb;
 
 import com.beneficio.ejb.entity.Beneficio;
 import com.beneficio.ejb.entity.Transferencia;
+
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Remote;
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
  * @since 1.0
  */
 @Remote
+@PermitAll 
 public interface BeneficioEjbRemote {
 
     /**

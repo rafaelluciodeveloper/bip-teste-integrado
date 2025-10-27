@@ -6,7 +6,7 @@ Sistema de gerenciamento de benefícios com arquitetura modular.
 
 ### Backend (Spring Boot)
 - **Tecnologia**: Java 17, Spring Boot, Spring Data JPA
-- **Porta**: 8080
+- **Porta**: 8081
 - **API**: RESTful com documentação Swagger
 
 ### EJB Module
@@ -15,7 +15,7 @@ Sistema de gerenciamento de benefícios com arquitetura modular.
 
 ### Frontend (Angular)
 - **Tecnologia**: Angular, TypeScript, Bootstrap
-- **Porta**: 4200
+- **Porta**: 8082
 - **Interface**: Web responsiva
 
 ### Banco de Dados
@@ -36,30 +36,15 @@ docker-compose logs -f
 docker-compose down
 ```
 
-### Desenvolvimento Local
-```bash
-# Backend
-cd backend-module
-mvn spring-boot:run
-
-# Frontend
-cd frontend
-npm start
-```
-
 ## 🌐 Acessos
 
 ### Frontend
-- **URL**: http://localhost:4200
+- **URL**: http://localhost:8082
 - **Funcionalidades**: CRUD de benefícios, transferências, histórico
 
 ### Swagger (API Documentation)
-- **URL**: http://localhost:8080/swagger-ui.html
+- **URL**: http://localhost:8081/beneficio-api/swagger-ui/index.html
 - **Endpoints**: Documentação completa da API REST
-
-### Health Check
-- **Backend**: http://localhost:8080/actuator/health
-- **Frontend**: http://localhost:4200/health
 
 ## 📋 Funcionalidades
 
@@ -84,9 +69,8 @@ npm start
 
 ```
 ├── backend-module/     # Spring Boot REST API
+├── ear-module/         # EAR: empacota o EJB (negócio/JPA) e o WAR (API REST)
 ├── ejb-module/         # Jakarta EE EJB
 ├── frontend/           # Angular Application
-├── db/                 # Database scripts
-├── docs/               # Documentation
 └── docker-compose.yml  # Docker configuration
 ```
