@@ -9,10 +9,7 @@ import com.beneficio.ejb.repository.TransferenciaRepository;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.PersistenceException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,8 +34,7 @@ public class BeneficioService {
     @Inject
     private TransferenciaRepository transferenciaRepository;
     
-    @PersistenceContext
-    private EntityManager em;
+    // Service não deve acessar diretamente EntityManager; toda persistência via repository
 
     /**
      * Busca todos os benefícios cadastrados no sistema.
@@ -152,8 +148,16 @@ public class BeneficioService {
             throw new IllegalArgumentException(Messages.VALOR_DEVE_SER_POSITIVO);
         }
 
-        Beneficio from = em.find(Beneficio.class, fromId, LockModeType.PESSIMISTIC_WRITE);
-        Beneficio to = em.find(Beneficio.class, toId, LockModeType.PESSIMISTIC_WRITE);
+        // Lock ordenado por ID para evitar deadlocks: sempre adquirir na ordem ascendente
+        Long lowId = fromId < toId ? fromId : toId;
+        Long highId = fromId < toId ? toId : fromId;
+
+        Beneficio low = beneficioRepository.findByIdForUpdate(lowId);
+        Beneficio high = beneficioRepository.findByIdForUpdate(highId);
+
+        // Mapear de volta para origem/destino mantendo a semântica da operação
+        Beneficio from = fromId.equals(lowId) ? low : high;
+        Beneficio to = toId.equals(lowId) ? low : high;
 
         if (from == null) {
             throw new IllegalArgumentException(String.format(Messages.BENEFICIO_ORIGEM_NAO_ENCONTRADO, fromId));
@@ -179,16 +183,13 @@ public class BeneficioService {
             from.setValor(from.getValor().subtract(amount));
             to.setValor(to.getValor().add(amount));
 
-            em.merge(from);
-            em.merge(to);
+            beneficioRepository.save(from);
+            beneficioRepository.save(to);
             
             Transferencia transferencia = new Transferencia(from, to, amount);
             transferenciaRepository.save(transferencia);
-            
-            em.flush();
-            
-        } catch (OptimisticLockException e) {
-            throw new IllegalStateException("Transferência falhou devido a conflito de concorrência. Tente novamente.");
+        } catch (PersistenceException e) {
+            throw new IllegalStateException("Transferência falhou devido a erro de persistência. Tente novamente.");
         }
     }
 

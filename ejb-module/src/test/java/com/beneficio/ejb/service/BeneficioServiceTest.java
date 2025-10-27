@@ -11,8 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.PersistenceException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,9 +38,6 @@ class BeneficioServiceTest {
 
     @Mock
     private TransferenciaRepository transferenciaRepository;
-
-    @Mock
-    private EntityManager em;
 
     @InjectMocks
     private BeneficioService beneficioService;
@@ -194,18 +190,17 @@ class BeneficioServiceTest {
 
     @Test
     void testTransferir_Success() {
-        when(em.find(Beneficio.class, 1L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio1);
-        when(em.find(Beneficio.class, 2L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio2);
+        when(beneficioRepository.findByIdForUpdate(1L)).thenReturn(beneficio1);
+        when(beneficioRepository.findByIdForUpdate(2L)).thenReturn(beneficio2);
+        when(beneficioRepository.save(any(Beneficio.class))).thenReturn(beneficio1);
         when(transferenciaRepository.save(any(Transferencia.class))).thenReturn(new Transferencia());
 
         beneficioService.transferir(1L, 2L, new BigDecimal("100.00"));
 
-        verify(em).find(Beneficio.class, 1L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
-        verify(em).find(Beneficio.class, 2L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
-        verify(em).merge(beneficio1);
-        verify(em).merge(beneficio2);
+        verify(beneficioRepository).findByIdForUpdate(1L);
+        verify(beneficioRepository).findByIdForUpdate(2L);
+        verify(beneficioRepository, times(2)).save(any(Beneficio.class));
         verify(transferenciaRepository).save(any(Transferencia.class));
-        verify(em).flush();
     }
 
     @Test
@@ -246,8 +241,8 @@ class BeneficioServiceTest {
 
     @Test
     void testTransferir_BeneficioOrigemNotFound() {
-        when(em.find(Beneficio.class, 999L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(null);
-        when(em.find(Beneficio.class, 2L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio2);
+        when(beneficioRepository.findByIdForUpdate(999L)).thenReturn(null);
+        when(beneficioRepository.findByIdForUpdate(2L)).thenReturn(beneficio2);
 
         assertThrows(IllegalArgumentException.class, () -> {
             beneficioService.transferir(999L, 2L, new BigDecimal("100.00"));
@@ -256,8 +251,8 @@ class BeneficioServiceTest {
 
     @Test
     void testTransferir_BeneficioDestinoNotFound() {
-        when(em.find(Beneficio.class, 1L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio1);
-        when(em.find(Beneficio.class, 999L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(null);
+        when(beneficioRepository.findByIdForUpdate(1L)).thenReturn(beneficio1);
+        when(beneficioRepository.findByIdForUpdate(999L)).thenReturn(null);
 
         assertThrows(IllegalArgumentException.class, () -> {
             beneficioService.transferir(1L, 999L, new BigDecimal("100.00"));
@@ -267,8 +262,8 @@ class BeneficioServiceTest {
     @Test
     void testTransferir_BeneficioOrigemInativo() {
         beneficio1.setAtivo(false);
-        when(em.find(Beneficio.class, 1L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio1);
-        when(em.find(Beneficio.class, 2L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio2);
+        when(beneficioRepository.findByIdForUpdate(1L)).thenReturn(beneficio1);
+        when(beneficioRepository.findByIdForUpdate(2L)).thenReturn(beneficio2);
 
         assertThrows(IllegalStateException.class, () -> {
             beneficioService.transferir(1L, 2L, new BigDecimal("100.00"));
@@ -278,8 +273,8 @@ class BeneficioServiceTest {
     @Test
     void testTransferir_BeneficioDestinoInativo() {
         beneficio2.setAtivo(false);
-        when(em.find(Beneficio.class, 1L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio1);
-        when(em.find(Beneficio.class, 2L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio2);
+        when(beneficioRepository.findByIdForUpdate(1L)).thenReturn(beneficio1);
+        when(beneficioRepository.findByIdForUpdate(2L)).thenReturn(beneficio2);
 
         assertThrows(IllegalStateException.class, () -> {
             beneficioService.transferir(1L, 2L, new BigDecimal("100.00"));
@@ -288,8 +283,8 @@ class BeneficioServiceTest {
 
     @Test
     void testTransferir_InsufficientBalance() {
-        when(em.find(Beneficio.class, 1L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio1);
-        when(em.find(Beneficio.class, 2L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio2);
+        when(beneficioRepository.findByIdForUpdate(1L)).thenReturn(beneficio1);
+        when(beneficioRepository.findByIdForUpdate(2L)).thenReturn(beneficio2);
 
         assertThrows(IllegalStateException.class, () -> {
             beneficioService.transferir(1L, 2L, new BigDecimal("2000.00"));
@@ -297,10 +292,10 @@ class BeneficioServiceTest {
     }
 
     @Test
-    void testTransferir_OptimisticLockException() {
-        when(em.find(Beneficio.class, 1L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio1);
-        when(em.find(Beneficio.class, 2L, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)).thenReturn(beneficio2);
-        when(em.merge(any(Beneficio.class))).thenThrow(new OptimisticLockException());
+    void testTransferir_PersistenceException() {
+        when(beneficioRepository.findByIdForUpdate(1L)).thenReturn(beneficio1);
+        when(beneficioRepository.findByIdForUpdate(2L)).thenReturn(beneficio2);
+        when(beneficioRepository.save(any(Beneficio.class))).thenThrow(new PersistenceException("Erro de persistência"));
 
         assertThrows(IllegalStateException.class, () -> {
             beneficioService.transferir(1L, 2L, new BigDecimal("100.00"));

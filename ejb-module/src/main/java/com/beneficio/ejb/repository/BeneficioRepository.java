@@ -6,6 +6,7 @@ import com.beneficio.ejb.entity.Beneficio;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
@@ -41,6 +42,17 @@ public class BeneficioRepository {
      */
     public Beneficio findById(Long id) {
         return em.find(Beneficio.class, id);
+    }
+
+    /**
+     * Busca um benefício com lock pessimista de escrita.
+     * Garante que a linha será bloqueada para evitar concorrência durante atualizações.
+     *
+     * @param id identificador único do benefício
+     * @return benefício bloqueado com {@link LockModeType#PESSIMISTIC_WRITE}
+     */
+    public Beneficio findByIdForUpdate(Long id) {
+        return em.find(Beneficio.class, id, LockModeType.PESSIMISTIC_WRITE);
     }
 
     /**

@@ -50,12 +50,13 @@
                   class="form-select" 
                   id="fromId"
                   [(ngModel)]="transferencia.fromId"
+                  (ngModelChange)="onFromChanged($event)"
                   name="fromId"
                   required>
                   <option value="">Selecione o benefício origem</option>
                   @for (beneficio of beneficiosOrigem; track beneficio.id) {
-                    <option [value]="beneficio.id">
-                      {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
+                    <option [ngValue]="beneficio.id">
+                      {{ beneficio.nome }}
                     </option>
                   }
                 </select>
@@ -72,12 +73,13 @@
                   class="form-select" 
                   id="toId"
                   [(ngModel)]="transferencia.toId"
+                  (ngModelChange)="onToChanged($event)"
                   name="toId"
                   required>
                   <option value="">Selecione o benefício destino</option>
                   @for (beneficio of beneficiosDestino; track beneficio.id) {
-                    <option [value]="beneficio.id">
-                      {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
+                    <option [ngValue]="beneficio.id">
+                      {{ beneficio.nome }}
                     </option>
                   }
                 </select>
@@ -93,26 +95,38 @@
               <div class="col-12">
                 <label for="amount" class="form-label">Valor da Transferência *</label>
                 <input 
-                  type="number" 
+                  type="text" 
                   class="form-control" 
                   id="amount"
-                  [(ngModel)]="transferencia.amount"
-                  name="amount"
-                  step="0.01"
-                  min="0.01"
-                  [max]="beneficioOrigem?.valor || 999999"
+                  [value]="amountText"
+                  name="amountText"
+                  (input)="onAmountInput($event)"
                   required>
-                <div class="form-text">
-                  <i class="fas fa-info-circle me-1"></i>
-                  Valor máximo: {{ beneficioOrigem?.valor | currency:'BRL':'symbol':'1.2-2' }}
-                </div>
+                @if (excedeSaldo) {
+                  <div class="form-text text-warning">
+                    <i class="fas fa-exclamation-triangle me-1"></i>
+                    Valor excede o saldo disponível do benefício de origem.
+                  </div>
+                }
+                @if (!excedeSaldo && beneficioOrigem && transferencia.amount > 0) {
+                  <div class="form-text">
+                    <i class="fas fa-arrow-down me-1"></i>
+                    Novo saldo origem: {{ novoSaldoOrigem | currency:'BRL':'symbol':'1.2-2' }}
+                  </div>
+                }
+                @if (!excedeSaldo && beneficioDestino && transferencia.amount > 0) {
+                  <div class="form-text">
+                    <i class="fas fa-arrow-up me-1"></i>
+                    Novo saldo destino: {{ novoSaldoDestino | currency:'BRL':'symbol':'1.2-2' }}
+                  </div>
+                }
               </div>
             </div>
             <div class="mt-4">
               <button 
                 type="submit" 
                 class="btn btn-success me-2"
-                [disabled]="loading || !transferencia.fromId || !transferencia.toId || transferencia.amount <= 0">
+                [disabled]="loading || !transferencia.fromId || !transferencia.toId || transferencia.amount <= 0 || (beneficioOrigem && transferencia.amount > beneficioOrigem.valor)">
                 @if (!loading) {
                   <i class="fas fa-exchange-alt me-2"></i>
                 }

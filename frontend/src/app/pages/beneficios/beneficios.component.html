@@ -49,13 +49,12 @@
               <div class="col-md-6">
                 <label for="valor" class="form-label">Valor *</label>
                 <input 
-                  type="number" 
+                  type="text" 
                   class="form-control" 
                   id="valor"
-                  [(ngModel)]="novoBeneficio.valor"
-                  name="valor"
-                  step="0.01"
-                  min="0"
+                  [value]="novoValorText"
+                  name="valorText"
+                  (input)="onNovoValorInput($event)"
                   required>
               </div>
             </div>
@@ -137,13 +136,12 @@
                 <div class="mb-3">
                   <label for="editValor" class="form-label">Valor *</label>
                   <input 
-                    type="number" 
+                    type="text" 
                     class="form-control" 
                     id="editValor"
-                    [(ngModel)]="beneficioEditando.valor"
-                    name="editValor"
-                    step="0.01"
-                    min="0"
+                    [value]="editValorText"
+                    name="editValorText"
+                    (input)="onEditValorInput($event)"
                     required>
                 </div>
                 <div class="mb-3">
@@ -209,8 +207,8 @@
                     required>
                     <option value="">Selecione o benefício destino</option>
                     @for (beneficio of beneficiosDisponiveis; track beneficio.id) {
-                      <option [value]="beneficio.id">
-                        {{ beneficio.nome }} - {{ beneficio.valor | currency:'BRL':'symbol':'1.2-2' }}
+                      <option [ngValue]="beneficio.id">
+                        {{ beneficio.nome }}
                       </option>
                     }
                   </select>
@@ -218,19 +216,36 @@
                 <div class="mb-3">
                   <label for="transferAmount" class="form-label">Valor da Transferência *</label>
                   <input 
-                    type="number" 
+                    type="text" 
                     class="form-control" 
                     id="transferAmount"
-                    [(ngModel)]="transferencia.amount"
-                    name="transferAmount"
-                    step="0.01"
-                    min="0.01"
+                    [value]="transferAmountText"
+                    name="transferAmountText"
+                    (input)="onTransferAmountInput($event)"
                     required>
+                  @if (excedeSaldo) {
+                    <div class="form-text text-warning">
+                      <i class="fas fa-exclamation-triangle me-1"></i>
+                      Valor excede o saldo disponível do benefício de origem.
+                    </div>
+                  }
+                  @if (!excedeSaldo && beneficioOrigem && transferencia.amount > 0) {
+                    <div class="form-text">
+                      <i class="fas fa-arrow-down me-1"></i>
+                      Novo saldo origem: {{ novoSaldoOrigem | currency:'BRL':'symbol':'1.2-2' }}
+                    </div>
+                  }
+                  @if (!excedeSaldo && beneficioDestino && transferencia.amount > 0) {
+                    <div class="form-text">
+                      <i class="fas fa-arrow-up me-1"></i>
+                      Novo saldo destino: {{ novoSaldoDestino | currency:'BRL':'symbol':'1.2-2' }}
+                    </div>
+                  }
                 </div>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-success" (click)="realizarTransferencia()">
+              <button type="button" class="btn btn-success" (click)="realizarTransferencia()" [disabled]="transferencia.amount <= 0 || (beneficioOrigem && transferencia.amount > beneficioOrigem.valor)">
                 <i class="fas fa-exchange-alt me-2"></i>
                 Transferir
               </button>

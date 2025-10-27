@@ -36,10 +36,14 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
     valor: 0,
     ativo: true
   };
+  // Texto com máscara para o valor do novo benefício
+  novoValorText = '';
   showForm = false;
 
   // Formulário de edição
   beneficioEditando: Beneficio | null = null;
+  // Texto com máscara para o valor na edição
+  editValorText = '';
   showEditForm = false;
 
   // Formulário de transferência
@@ -48,6 +52,8 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
     toId: 0,
     amount: 0
   };
+  // Texto com máscara para o valor de transferência
+  transferAmountText = '';
   showTransferForm = false;
 
   private readonly beneficioService = inject(BeneficioService);
@@ -117,6 +123,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    */
   editarBeneficio(beneficio: Beneficio): void {
     this.beneficioEditando = { ...beneficio };
+    this.editValorText = this.formatCurrencyBRL(this.beneficioEditando.valor);
     this.showEditForm = true;
   }
 
@@ -185,6 +192,8 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    */
   iniciarTransferencia(beneficio: Beneficio): void {
     this.transferencia.fromId = beneficio.id!;
+    this.transferencia.amount = 0;
+    this.transferAmountText = '';
     this.showTransferForm = true;
   }
 
@@ -199,6 +208,12 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
 
     if (this.transferencia.amount <= 0) {
       this.error = 'Valor deve ser positivo';
+      return;
+    }
+
+    const origem = this.beneficios.find(b => b.id === this.transferencia.fromId);
+    if (origem && this.transferencia.amount > origem.valor) {
+      this.error = 'Valor não pode exceder o saldo do benefício de origem';
       return;
     }
 
@@ -220,6 +235,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    */
   cancelarTransferencia(): void {
     this.transferencia = { fromId: 0, toId: 0, amount: 0 };
+    this.transferAmountText = '';
     this.showTransferForm = false;
   }
 
@@ -233,6 +249,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
       valor: 0,
       ativo: true
     };
+    this.novoValorText = '';
   }
 
   /**
@@ -242,5 +259,82 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    */
   get beneficiosDisponiveis(): Beneficio[] {
     return this.beneficios.filter(b => b.id !== this.transferencia.fromId);
+  }
+
+  /**
+   * Retorna benefício de origem selecionado no modal de transferência.
+   */
+  get beneficioOrigem(): Beneficio | null {
+    return this.beneficios.find(b => b.id === this.transferencia.fromId) || null;
+  }
+
+  /** Benefício destino selecionado no modal */
+  get beneficioDestino(): Beneficio | null {
+    return this.beneficios.find(b => b.id === this.transferencia.toId) || null;
+  }
+
+  /** Indica se o valor excede o saldo disponível do benefício de origem */
+  get excedeSaldo(): boolean {
+    const origem = this.beneficioOrigem;
+    return !!origem && this.transferencia.amount > origem.valor;
+  }
+
+  /** Novo saldo da origem após a transferência */
+  get novoSaldoOrigem(): number {
+    const origem = this.beneficioOrigem;
+    const amt = this.transferencia.amount || 0;
+    return origem ? Math.max(0, Number((origem.valor - amt).toFixed(2))) : 0;
+  }
+
+  /** Novo saldo do destino após a transferência */
+  get novoSaldoDestino(): number {
+    const destino = this.beneficioDestino;
+    const amt = this.transferencia.amount || 0;
+    return destino ? Number((destino.valor + amt).toFixed(2)) : 0;
+  }
+
+  /**
+   * Formata número para moeda BRL.
+   */
+  private formatCurrencyBRL(value: number): string {
+    if (isNaN(value)) {
+      return '';
+    }
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  /**
+   * Converte texto com máscara para número (centavos => reais).
+   */
+  private parseCurrencyBRL(text: string): number {
+    const digits = (text || '').replace(/\D/g, '');
+    const value = Number(digits) / 100;
+    return isNaN(value) ? 0 : Number(value.toFixed(2));
+  }
+
+  /**
+   * Handlers de máscara de moeda nos formulários.
+   */
+  onNovoValorInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const numeric = this.parseCurrencyBRL(target.value);
+    this.novoBeneficio.valor = numeric;
+    this.novoValorText = this.formatCurrencyBRL(numeric);
+  }
+
+  onEditValorInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const numeric = this.parseCurrencyBRL(target.value);
+    if (this.beneficioEditando) {
+      this.beneficioEditando.valor = numeric;
+      this.editValorText = this.formatCurrencyBRL(numeric);
+    }
+  }
+
+  onTransferAmountInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const numeric = this.parseCurrencyBRL(target.value);
+    this.transferencia.amount = numeric;
+    this.transferAmountText = this.formatCurrencyBRL(numeric);
   }
 }

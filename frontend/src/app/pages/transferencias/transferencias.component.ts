@@ -35,6 +35,9 @@ export class TransferenciasComponent implements OnInit, OnDestroy {
     amount: 0
   };
 
+  // Campo de texto com máscara de moeda para o valor
+  amountText = '';
+
   private readonly beneficioService = inject(BeneficioService);
 
   /**
@@ -86,6 +89,12 @@ export class TransferenciasComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const origem = this.beneficioOrigem;
+    if (origem && this.transferencia.amount > origem.valor) {
+      this.error = 'Valor não pode exceder o saldo do benefício de origem';
+      return;
+    }
+
     this.loading = true;
     this.error = null;
     this.success = null;
@@ -115,6 +124,7 @@ export class TransferenciasComponent implements OnInit, OnDestroy {
       toId: 0,
       amount: 0
     };
+    this.amountText = '';
   }
 
   /**
@@ -151,5 +161,74 @@ export class TransferenciasComponent implements OnInit, OnDestroy {
    */
   get beneficioDestino(): Beneficio | null {
     return this.beneficios.find(b => b.id === this.transferencia.toId) || null;
+  }
+
+  /**
+   * Valor máximo permitido para transferência (saldo da origem).
+   */
+  get maximoTransferencia(): number {
+    return this.beneficioOrigem?.valor ?? 0;
+  }
+
+  /** Indica se o valor excede o saldo disponível do benefício de origem */
+  get excedeSaldo(): boolean {
+    const origem = this.beneficioOrigem;
+    return !!origem && this.transferencia.amount > origem.valor;
+  }
+
+  /** Novo saldo da origem após a transferência */
+  get novoSaldoOrigem(): number {
+    const origem = this.beneficioOrigem;
+    const amt = this.transferencia.amount || 0;
+    return origem ? Math.max(0, Number((origem.valor - amt).toFixed(2))) : 0;
+  }
+
+  /** Novo saldo do destino após a transferência */
+  get novoSaldoDestino(): number {
+    const destino = this.beneficioDestino;
+    const amt = this.transferencia.amount || 0;
+    return destino ? Number((destino.valor + amt).toFixed(2)) : 0;
+  }
+
+  /**
+   * Formata número para moeda BRL.
+   */
+  private formatCurrencyBRL(value: number): string {
+    if (isNaN(value)) {
+      return '';
+    }
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  /**
+   * Converte texto com máscara para número (centavos => reais).
+   */
+  private parseCurrencyBRL(text: string): number {
+    const digits = (text || '').replace(/\D/g, '');
+    const value = Number(digits) / 100;
+    return isNaN(value) ? 0 : Number(value.toFixed(2));
+  }
+
+  /**
+   * Handler de input do valor com máscara.
+   */
+  onAmountInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const numeric = this.parseCurrencyBRL(target.value);
+    this.transferencia.amount = numeric;
+    this.amountText = this.formatCurrencyBRL(numeric);
+  }
+
+  /**
+   * Ao trocar a origem, resetar valor e máscara.
+   */
+  onFromChanged(value: unknown): void {
+    this.transferencia.fromId = Number(value);
+    this.transferencia.amount = 0;
+    this.amountText = '';
+  }
+
+  onToChanged(value: unknown): void {
+    this.transferencia.toId = Number(value);
   }
 }
