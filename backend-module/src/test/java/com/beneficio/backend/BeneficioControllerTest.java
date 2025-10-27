@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @version 1.0
  * @since 1.0
  */
-@WebMvcTest(BeneficioController.class)
+@WebMvcTest(com.beneficio.backend.controller.BeneficioController.class)
 class BeneficioControllerTest {
 
     @Autowired
@@ -57,7 +57,7 @@ class BeneficioControllerTest {
         
         when(beneficioEjb.findAll()).thenReturn(beneficios);
 
-        mockMvc.perform(get("/api/v1/beneficios"))
+        mockMvc.perform(get("/beneficios"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].nome").value("Beneficio A"))
@@ -76,7 +76,7 @@ class BeneficioControllerTest {
         
         when(beneficioEjb.findById(1L)).thenReturn(beneficio);
 
-        mockMvc.perform(get("/api/v1/beneficios/1"))
+        mockMvc.perform(get("/beneficios/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nome").value("Beneficio A"));
@@ -91,7 +91,7 @@ class BeneficioControllerTest {
     void testGetBeneficioByIdNotFound() throws Exception {
         when(beneficioEjb.findById(999L)).thenReturn(null);
 
-        mockMvc.perform(get("/api/v1/beneficios/999"))
+        mockMvc.perform(get("/beneficios/999"))
                 .andExpect(status().isNotFound());
     }
 
@@ -107,7 +107,7 @@ class BeneficioControllerTest {
         
         when(beneficioEjb.save(any(Beneficio.class))).thenReturn(beneficio);
 
-        mockMvc.perform(post("/api/v1/beneficios")
+        mockMvc.perform(post("/beneficios")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beneficio)))
                 .andExpect(status().isCreated())
@@ -127,7 +127,7 @@ class BeneficioControllerTest {
         
         when(beneficioEjb.update(eq(1L), any(Beneficio.class))).thenReturn(beneficio);
 
-        mockMvc.perform(put("/api/v1/beneficios/1")
+        mockMvc.perform(put("/beneficios/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beneficio)))
                 .andExpect(status().isOk())
@@ -143,7 +143,7 @@ class BeneficioControllerTest {
     void testDeleteBeneficio() throws Exception {
         doNothing().when(beneficioEjb).deleteById(1L);
 
-        mockMvc.perform(delete("/api/v1/beneficios/1"))
+        mockMvc.perform(delete("/beneficios/1"))
                 .andExpect(status().isNoContent());
 
         verify(beneficioEjb).deleteById(1L);
@@ -156,11 +156,14 @@ class BeneficioControllerTest {
      */
     @Test
     void testTransferSuccess() throws Exception {
-        TransferenciaRequest request = new TransferenciaRequest(1L, 2L, new BigDecimal("100.00"));
+        TransferenciaRequest request = new TransferenciaRequest();
+        request.setFromId(1L);
+        request.setToId(2L);
+        request.setAmount(new BigDecimal("100.00"));
         
         doNothing().when(beneficioEjb).transfer(1L, 2L, new BigDecimal("100.00"));
 
-        mockMvc.perform(post("/api/v1/beneficios/transferir")
+        mockMvc.perform(post("/beneficios/transferir")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -174,12 +177,15 @@ class BeneficioControllerTest {
      */
     @Test
     void testTransferInsufficientFunds() throws Exception {
-        TransferenciaRequest request = new TransferenciaRequest(1L, 2L, new BigDecimal("100.00"));
+        TransferenciaRequest request = new TransferenciaRequest();
+        request.setFromId(1L);
+        request.setToId(2L);
+        request.setAmount(new BigDecimal("100.00"));
         
         doThrow(new IllegalStateException("Saldo insuficiente"))
                 .when(beneficioEjb).transfer(1L, 2L, new BigDecimal("100.00"));
 
-        mockMvc.perform(post("/api/v1/beneficios/transferir")
+        mockMvc.perform(post("/beneficios/transferir")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isConflict())

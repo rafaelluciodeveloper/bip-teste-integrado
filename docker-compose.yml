@@ -1,53 +1,35 @@
 services:
-  # Backend Spring Boot Application
-  backend:
+  # WildFly com EAR Application
+  wildfly:
     build:
       context: .
-      dockerfile: ./backend-module/Dockerfile
-    container_name: backend
+      dockerfile: ./ear-module/Dockerfile
+    container_name: wildfly
     ports:
       - "8080:8080"
+      - "9990:9990"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.h2.Driver
-      - SPRING_DATASOURCE_USERNAME=sa
-      - SPRING_DATASOURCE_PASSWORD=
+      - WILDFLY_ADMIN_USER=admin
+      - WILDFLY_ADMIN_PASSWORD=admin
     networks:
       - app-network
-    volumes:
-      - ./backend-module/target:/app/target
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
-  # Frontend Angular Application
-  frontend:
+  # Nginx com Frontend Angular + Reverse Proxy
+  nginx:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: frontend
-    ports:
-      - "4200:4200"
-    environment:
-      - API_URL=/api/v1
-    depends_on:
-      - backend
-    networks:
-      - app-network
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/angular.json:/app/angular.json
-      - ./frontend/package.json:/app/package.json
-
-  # Nginx Reverse Proxy (Optional)
-  nginx:
-    image: nginx:alpine
     container_name: nginx
     ports:
       - "80:80"
-    volumes:
-      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - frontend
-      - backend
+      - wildfly
     networks:
       - app-network
 

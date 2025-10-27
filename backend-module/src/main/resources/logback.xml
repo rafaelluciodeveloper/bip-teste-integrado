@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Completely disable Logback for WildFly deployment -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    
+    <!-- Empty configuration to prevent Logback from initializing -->
+</configuration>

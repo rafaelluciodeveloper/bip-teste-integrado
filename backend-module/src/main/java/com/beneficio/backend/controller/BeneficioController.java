@@ -1,37 +1,35 @@
-package com.beneficio.backend;
+package com.beneficio.backend.controller;
 
 import com.beneficio.backend.dto.TransferenciaRequest;
-import com.beneficio.ejb.BeneficioEjb;
+import com.beneficio.ejb.BeneficioEjbLocal;
 import com.beneficio.ejb.entity.Beneficio;
 import com.beneficio.ejb.entity.Transferencia;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller REST responsável pelos endpoints relacionados aos benefícios.
  * Atua como interface entre o frontend e o EJB module.
- * 
+ *
  * @author Rafael Lucio
  * @version 1.0
  * @since 1.0
  */
 @RestController
-@RequestMapping("/api/v1/beneficios")
+@RequestMapping("/beneficios")
 @CrossOrigin(origins = "*")
 public class BeneficioController {
 
     @Autowired
-    private BeneficioEjb beneficioEjb;
+    private BeneficioEjbLocal beneficioEjb;
 
     /**
      * Lista todos os benefícios cadastrados no sistema.
-     * 
+     *
      * @return ResponseEntity contendo a lista de benefícios
      */
     @GetMapping
@@ -39,10 +37,10 @@ public class BeneficioController {
         List<Beneficio> beneficios = beneficioEjb.findAll();
         return ResponseEntity.ok(beneficios);
     }
-    
+
     /**
      * Busca um benefício específico pelo seu identificador.
-     * 
+     *
      * @param id identificador único do benefício
      * @return ResponseEntity contendo o benefício ou 404 se não encontrado
      */
@@ -51,22 +49,22 @@ public class BeneficioController {
         Beneficio beneficio = beneficioEjb.findById(id);
         return beneficio != null ? ResponseEntity.ok(beneficio) : ResponseEntity.notFound().build();
     }
-    
+
     /**
      * Cria um novo benefício no sistema.
-     * 
+     *
      * @param beneficio dados do benefício a ser criado
      * @return ResponseEntity contendo o benefício criado ou erro de validação
      */
     @PostMapping
     public ResponseEntity<Beneficio> criar(@Valid @RequestBody Beneficio beneficio) {
         Beneficio savedBeneficio = beneficioEjb.save(beneficio);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBeneficio);
+        return ResponseEntity.status(201).body(savedBeneficio);
     }
-    
+
     /**
      * Atualiza um benefício existente.
-     * 
+     *
      * @param id identificador do benefício a ser atualizado
      * @param beneficio dados do benefício para atualização
      * @return ResponseEntity contendo o benefício atualizado ou 404 se não encontrado
@@ -76,10 +74,10 @@ public class BeneficioController {
         Beneficio updatedBeneficio = beneficioEjb.update(id, beneficio);
         return ResponseEntity.ok(updatedBeneficio);
     }
-    
+
     /**
      * Remove um benefício do sistema.
-     * 
+     *
      * @param id identificador do benefício a ser removido
      * @return ResponseEntity indicando sucesso ou erro
      */
@@ -88,22 +86,10 @@ public class BeneficioController {
         beneficioEjb.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-    
-    /**
-     * Realiza transferência de valor entre dois benefícios.
-     * 
-     * @param request dados da transferência (origem, destino e valor)
-     * @return ResponseEntity indicando sucesso ou erro da transferência
-     */
-    @PostMapping("/transferir")
-    public ResponseEntity<String> transferir(@Valid @RequestBody TransferenciaRequest request) {
-        beneficioEjb.transfer(request.getFromId(), request.getToId(), request.getAmount());
-        return ResponseEntity.ok("Transferência realizada com sucesso");
-    }
-    
+
     /**
      * Lista apenas os benefícios que estão ativos.
-     * 
+     *
      * @return ResponseEntity contendo a lista de benefícios ativos
      */
     @GetMapping("/ativos")
@@ -111,10 +97,10 @@ public class BeneficioController {
         List<Beneficio> beneficios = beneficioEjb.findAtivos();
         return ResponseEntity.ok(beneficios);
     }
-    
+
     /**
      * Busca benefícios cujo nome contenha o texto especificado.
-     * 
+     *
      * @param nome texto a ser buscado no nome dos benefícios
      * @return ResponseEntity contendo a lista de benefícios encontrados
      */
@@ -123,10 +109,22 @@ public class BeneficioController {
         List<Beneficio> beneficios = beneficioEjb.searchByNome(nome);
         return ResponseEntity.ok(beneficios);
     }
-    
+
+    /**
+     * Realiza transferência de valor entre dois benefícios.
+     *
+     * @param request dados da transferência
+     * @return ResponseEntity indicando sucesso ou erro
+     */
+    @PostMapping("/transferir")
+    public ResponseEntity<String> transferir(@Valid @RequestBody TransferenciaRequest request) {
+        beneficioEjb.transfer(request.getFromId(), request.getToId(), request.getAmount());
+        return ResponseEntity.ok("Transferência realizada com sucesso");
+    }
+
     /**
      * Lista o histórico de todas as transferências realizadas.
-     * 
+     *
      * @return ResponseEntity contendo a lista de transferências
      */
     @GetMapping("/transferencias/historico")
@@ -134,10 +132,10 @@ public class BeneficioController {
         List<Transferencia> transferencias = beneficioEjb.getHistoricoTransferencias();
         return ResponseEntity.ok(transferencias);
     }
-    
+
     /**
      * Lista o histórico de transferências de um benefício específico.
-     * 
+     *
      * @param beneficioId identificador do benefício
      * @return ResponseEntity contendo a lista de transferências do benefício
      */

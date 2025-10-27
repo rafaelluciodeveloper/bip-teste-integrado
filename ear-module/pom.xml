@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.beneficio</groupId>
+        <artifactId>bip-teste-integrado</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    
+    <artifactId>ear-module</artifactId>
+    <packaging>ear</packaging>
+
+    <dependencies>
+        <!-- EJB Module como JAR -->
+        <dependency>
+            <groupId>com.beneficio</groupId>
+            <artifactId>ejb-module</artifactId>
+            <version>1.0.0</version>
+            <type>ejb</type>
+        </dependency>
+        
+        <!-- Backend Module como WAR -->
+        <dependency>
+            <groupId>com.beneficio</groupId>
+            <artifactId>backend-module</artifactId>
+            <version>1.0.0</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <modules>
+                        <ejbModule>
+                            <groupId>com.beneficio</groupId>
+                            <artifactId>ejb-module</artifactId>
+                        </ejbModule>
+                        <webModule>
+                            <groupId>com.beneficio</groupId>
+                            <artifactId>backend-module</artifactId>
+                            <contextRoot>/api</contextRoot>
+                        </webModule>
+                    </modules>
+                    <displayName>Beneficios EAR</displayName>
+                    <description>Sistema de Benefícios - Enterprise Application</description>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

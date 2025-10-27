@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources xmlns="http://www.jboss.org/schema/jbossas/datasources"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.jboss.org/schema/jbossas/datasources 
+             http://www.jboss.org/schema/jbossas/datasources/datasources_1_0.xsd">
+    
+    <datasource jndi-name="java:/DefaultDS" pool-name="BeneficioDS">
+        <connection-url>jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url>
+        <driver>h2</driver>
+        <pool>
+            <min-pool-size>5</min-pool-size>
+            <max-pool-size>20</max-pool-size>
+            <prefill>true</prefill>
+        </pool>
+        <security>
+            <user-name>sa</user-name>
+            <password></password>
+        </security>
+    </datasource>
+    
+    <drivers>
+        <driver name="h2" module="com.h2database.h2">
+            <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
+        </driver>
+    </drivers>
+</datasources>

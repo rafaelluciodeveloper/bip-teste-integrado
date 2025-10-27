@@ -1,59 +1,28 @@
 package com.beneficio.ejb;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-
 import com.beneficio.ejb.entity.Beneficio;
 import com.beneficio.ejb.entity.Transferencia;
-import com.beneficio.ejb.service.BeneficioService;
-
-import jakarta.ejb.Local;
 import jakarta.ejb.Remote;
-import jakarta.ejb.Stateless;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
- * EJB que atua como facade para integração com o Spring Boot.
- * Delega as operações para o BeneficioService interno.
- * Implementa interfaces local e remota para acesso via JNDI.
- *
+ * Interface remota para o EJB de benefícios.
+ * Permite acesso remoto via JNDI/RMI.
+ * 
  * @author Rafael Lucio
  * @version 1.0
  * @since 1.0
  */
-@Stateless
-@Local(BeneficioEjbLocal.class)
-@Remote(BeneficioEjbRemote.class)
-public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
-
-    private BeneficioService beneficioService;
-
-    /**
-     * Inicializa o BeneficioService via lookup JNDI.
-     * Usado para evitar problemas de injeção entre módulos EAR.
-     */
-    private BeneficioService getBeneficioService() {
-        if (beneficioService == null) {
-            try {
-                InitialContext ctx = new InitialContext();
-                beneficioService = (BeneficioService) ctx.lookup("java:module/BeneficioService");
-            } catch (NamingException e) {
-                throw new RuntimeException("Erro ao fazer lookup do BeneficioService", e);
-            }
-        }
-        return beneficioService;
-    }
+@Remote
+public interface BeneficioEjbRemote {
 
     /**
      * Busca todos os benefícios cadastrados no sistema.
      * 
      * @return lista de todos os benefícios
      */
-    public List<Beneficio> findAll() {
-        return getBeneficioService().findAll();
-    }
+    List<Beneficio> findAll();
 
     /**
      * Busca um benefício específico pelo seu identificador.
@@ -61,9 +30,7 @@ public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
      * @param id identificador único do benefício
      * @return benefício encontrado ou null se não existir
      */
-    public Beneficio findById(Long id) {
-        return getBeneficioService().findById(id).orElse(null);
-    }
+    Beneficio findById(Long id);
 
     /**
      * Salva um benefício aplicando validações de negócio.
@@ -72,9 +39,7 @@ public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
      * @return benefício salvo com ID preenchido
      * @throws IllegalArgumentException se as validações falharem
      */
-    public Beneficio save(Beneficio beneficio) {
-        return getBeneficioService().save(beneficio);
-    }
+    Beneficio save(Beneficio beneficio);
 
     /**
      * Atualiza um benefício existente aplicando as validações de negócio.
@@ -84,9 +49,7 @@ public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
      * @return benefício atualizado
      * @throws IllegalArgumentException se o benefício não for encontrado
      */
-    public Beneficio update(Long id, Beneficio beneficio) {
-        return getBeneficioService().update(id, beneficio);
-    }
+    Beneficio update(Long id, Beneficio beneficio);
 
     /**
      * Remove um benefício do sistema após verificar regras de negócio.
@@ -95,18 +58,14 @@ public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
      * @throws IllegalArgumentException se o benefício não for encontrado
      * @throws IllegalStateException se houver transferências associadas
      */
-    public void deleteById(Long id) {
-        getBeneficioService().deleteById(id);
-    }
+    void deleteById(Long id);
 
     /**
      * Busca todos os benefícios que estão ativos.
      * 
      * @return lista de benefícios ativos
      */
-    public List<Beneficio> findAtivos() {
-        return getBeneficioService().findAtivos();
-    }
+    List<Beneficio> findAtivos();
 
     /**
      * Busca benefícios cujo nome contenha o texto especificado.
@@ -114,9 +73,7 @@ public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
      * @param nome texto a ser buscado no nome dos benefícios
      * @return lista de benefícios que contêm o texto no nome
      */
-    public List<Beneficio> searchByNome(String nome) {
-        return getBeneficioService().searchByNome(nome);
-    }
+    List<Beneficio> searchByNome(String nome);
 
     /**
      * Realiza transferência de valor entre dois benefícios.
@@ -127,18 +84,14 @@ public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
      * @throws IllegalArgumentException se os parâmetros forem inválidos
      * @throws IllegalStateException se as validações de negócio falharem
      */
-    public void transfer(Long fromId, Long toId, BigDecimal amount) {
-        getBeneficioService().transferir(fromId, toId, amount);
-    }
+    void transfer(Long fromId, Long toId, BigDecimal amount);
     
     /**
      * Lista o histórico de todas as transferências realizadas.
      * 
      * @return lista de todas as transferências ordenadas por data
      */
-    public List<Transferencia> getHistoricoTransferencias() {
-        return getBeneficioService().getHistoricoTransferencias();
-    }
+    List<Transferencia> getHistoricoTransferencias();
     
     /**
      * Lista o histórico de transferências de um benefício específico.
@@ -146,7 +99,5 @@ public class BeneficioEjb implements BeneficioEjbLocal, BeneficioEjbRemote {
      * @param beneficioId identificador do benefício
      * @return lista de transferências do benefício
      */
-    public List<Transferencia> getTransferenciasByBeneficio(Long beneficioId) {
-        return getBeneficioService().getTransferenciasByBeneficio(beneficioId);
-    }
+    List<Transferencia> getTransferenciasByBeneficio(Long beneficioId);
 }
