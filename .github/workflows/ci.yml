@@ -28,15 +28,9 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Build and test ejb-module
+      - name: Build and test (root aggregator)
         run: |
-          cd ejb-module
-          mvn -B clean compile test install
-
-      - name: Build and test backend-module
-        run: |
-          cd backend-module
-          mvn -B clean compile test
+          mvn -B -U -fae clean test
 
   test-frontend:
     name: Test Frontend
