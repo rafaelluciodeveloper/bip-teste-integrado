@@ -91,7 +91,7 @@ describe('BeneficioService', () => {
     it('should delete beneficio', () => {
       service.delete(1).subscribe();
 
-      const req = httpMock.expectOne('http://localhost:8080/api/v1/beneficios/1');
+      const req = httpMock.expectOne('/api/v1/beneficios/1');
       expect(req.request.method).toBe('DELETE');
       req.flush({});
     });
